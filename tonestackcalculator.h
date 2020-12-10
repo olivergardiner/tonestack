@@ -11,6 +11,7 @@
 #include "fender.h"
 #include "marshall.h"
 #include "vox.h"
+#include "james.h"
 #include "marshall18.h"
 #include "moonlight.h"
 
@@ -38,25 +39,25 @@ private slots:
 
     void on_actionQuit_triggered();
 
-    void on_bassPosition_valueChanged(int value);
-
-    void on_midPosition_valueChanged(int value);
-
-    void on_treblePosition_valueChanged(int value);
-
-    void on_bassValue_textEdited(const QString &arg1);
-
-    void on_midValue_textEdited(const QString &arg1);
-
-    void on_trebleValue_textEdited(const QString &arg1);
-
-    void on_bassType_currentIndexChanged(int index);
-
-    void on_midType_currentIndexChanged(int index);
-
-    void on_trebleType_currentIndexChanged(int index);
-
     void on_stackSelection_currentIndexChanged(int index);
+
+    void on_pot1Position_valueChanged(int value);
+
+    void on_pot2Position_valueChanged(int value);
+
+    void on_pot3Position_valueChanged(int value);
+
+    void on_pot1Value_textEdited(const QString &arg1);
+
+    void on_pot2Value_textEdited(const QString &arg1);
+
+    void on_pot3Value_textEdited(const QString &arg1);
+
+    void on_pot1Type_currentIndexChanged(int index);
+
+    void on_pot2Type_currentIndexChanged(int index);
+
+    void on_pot3Type_currentIndexChanged(int index);
 
 private:
     Ui::ToneStackCalculator *ui;
@@ -67,13 +68,15 @@ private:
 
     qreal decade;
 
-    Potentiometer *bass;
-    Potentiometer *mid;
-    Potentiometer *treble;
+    Potentiometer *pot1;
+    Potentiometer *pot2;
+    Potentiometer *pot3;
+    Potentiometer *pot4;
 
     Fender *fender;
     Marshall *marshall;
     Vox *vox;
+    James *james;
     Marshall18 *marshall18;
     Moonlight *moonlight;
 

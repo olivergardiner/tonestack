@@ -6,14 +6,15 @@
 class Circuit
 {
 public:
-    Circuit(Potentiometer *bass, Potentiometer *mid, Potentiometer *treble);
+    Circuit(Potentiometer *pot1, Potentiometer *pot2, Potentiometer *pot3, Potentiometer *pot4);
 
     void load();
 
 protected:
-    Potentiometer *bass;
-    Potentiometer *mid;
-    Potentiometer *treble;
+    Potentiometer *pot1;
+    Potentiometer *pot2;
+    Potentiometer *pot3;
+    Potentiometer *pot4;
 
 private:
     virtual const char *getFile() = 0;

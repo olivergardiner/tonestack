@@ -2,13 +2,13 @@
 
 #define spice(X) (ngSpice_Command(const_cast <char *>(X)))
 
-Potentiometer::Potentiometer(QDial * dial, QLineEdit * valueText, QComboBox * typeSelect, QLabel * label, const char * labelText)
+Potentiometer::Potentiometer(QDial * dial, QLineEdit * valueText, QComboBox * typeSelect, QLabel * label, int id)
 {
     this->dial = dial;
     this->valueText = valueText;
     this->typeSelect = typeSelect;
     this->label = label;
-    this->labelText = labelText;
+    this->id = id;
 }
 
 potType Potentiometer::getType() const
@@ -169,9 +169,9 @@ void Potentiometer::alterModel()
     rhi = value - rlo;
 
     char alterHiCmd[256];
-    sprintf(alterHiCmd, "alter r%shi=%d", lowercase(labelText), rhi);
+    sprintf(alterHiCmd, "alter rp%dhi=%d", id, rhi);
     char alterLoCmd[256];
-    sprintf(alterLoCmd, "alter r%slo=%d", lowercase(labelText), rlo);
+    sprintf(alterLoCmd, "alter rp%dlo=%d", id, rlo);
 
     spice(alterHiCmd);
     spice(alterLoCmd);

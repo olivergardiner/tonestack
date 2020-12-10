@@ -1,21 +1,34 @@
-Single control tone circuit #1
+Moonlight circuit for tonestack
+
+* Insert you circuit in the area marked below - do not change anything else.
+* The input to your circuit is node 2 relative to node 0 which is ground
+* The output of your circuit must be node 3
+
+* Four potentiometers are nominally available for you to use in your circuit:
+* Pot 1 must consist of RP1LO and RP1HI
+* Pot 2 must consist of RP2LO and RP2HI
+* Pot 3 must consist of RP3LO and RP3HI
+* Pot 4 must consist of RP4LO and RP4HI - this is curently inactive
+
+* Nodes 0 to 9 are reserved
 
 VIN 0 1 DC 0 AC 1
-RS 1 2 47K
+RS 1 2 56K
 
-R1 2 4 220K
+******* PLACE YOUR CIRCUIT HERE *******
 
-RTONEHI 4 5 250K
-RTONELO 5 0 250K
+R1 2 10 220K
+R2 2 3 470K
+C1 11 3 560P
+R3 3 0 270K
 
-R2 2 6 470K
-C1 5 6 560p
-R3 6 0 270K
+RP2LO 0 11 250K
+RP2HI 11 10 250K
 
-RVOLHI 6 3 1
-RVOLLO 3 0 1MEG
+******* PLACE YOUR CIRCUIT HERE *******
 
-RL 3 0 10MEG
+RVOLHI 3 4 1
+RVOLLO 4 0 1MEG
 
 .OPTIONS NOACCT
 .AC DEC 10 10 100K

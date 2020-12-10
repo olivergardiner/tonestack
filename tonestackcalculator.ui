@@ -96,14 +96,14 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item alignment="Qt::AlignHCenter">
-        <widget class="QLabel" name="bassLabel">
+        <widget class="QLabel" name="pot1Label">
          <property name="text">
           <string>Bass</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="midLabel">
+        <widget class="QLabel" name="pot2Label">
          <property name="text">
           <string>Mid</string>
          </property>
@@ -113,7 +113,7 @@
         </widget>
        </item>
        <item alignment="Qt::AlignHCenter">
-        <widget class="QLabel" name="trebleLabel">
+        <widget class="QLabel" name="pot3Label">
          <property name="text">
           <string>Treble</string>
          </property>
@@ -137,7 +137,7 @@
         </spacer>
        </item>
        <item>
-        <widget class="QDial" name="bassPosition">
+        <widget class="QDial" name="pot1Position">
          <property name="minimumSize">
           <size>
            <width>0</width>
@@ -178,7 +178,7 @@
         </spacer>
        </item>
        <item>
-        <widget class="QDial" name="midPosition">
+        <widget class="QDial" name="pot2Position">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
            <horstretch>0</horstretch>
@@ -204,7 +204,7 @@
         </spacer>
        </item>
        <item>
-        <widget class="QDial" name="treblePosition">
+        <widget class="QDial" name="pot3Position">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
            <horstretch>0</horstretch>
@@ -247,7 +247,7 @@
         </spacer>
        </item>
        <item>
-        <widget class="QLineEdit" name="bassValue">
+        <widget class="QLineEdit" name="pot1Value">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -270,7 +270,7 @@
         </spacer>
        </item>
        <item>
-        <widget class="QLineEdit" name="midValue">
+        <widget class="QLineEdit" name="pot2Value">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -293,7 +293,7 @@
         </spacer>
        </item>
        <item>
-        <widget class="QLineEdit" name="trebleValue">
+        <widget class="QLineEdit" name="pot3Value">
          <property name="enabled">
           <bool>true</bool>
          </property>
@@ -354,7 +354,7 @@
         </spacer>
        </item>
        <item>
-        <widget class="QComboBox" name="bassType">
+        <widget class="QComboBox" name="pot1Type">
          <item>
           <property name="text">
            <string>Lin</string>
@@ -396,7 +396,7 @@
         </spacer>
        </item>
        <item>
-        <widget class="QComboBox" name="midType">
+        <widget class="QComboBox" name="pot2Type">
          <item>
           <property name="text">
            <string>Lin</string>
@@ -438,7 +438,7 @@
         </spacer>
        </item>
        <item>
-        <widget class="QComboBox" name="trebleType">
+        <widget class="QComboBox" name="pot3Type">
          <item>
           <property name="text">
            <string>Lin</string>

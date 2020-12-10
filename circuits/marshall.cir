@@ -1,27 +1,40 @@
-Marshall classic three knob control
+Marshall circuit for tonestack
+
+* Insert you circuit in the area marked below - do not change anything else.
+* The input to your circuit is node 2 relative to node 0 which is ground
+* The output of your circuit must be node 3
+
+* Four potentiometers are nominally available for you to use in your circuit:
+* Pot 1 must consist of RP1LO and RP1HI
+* Pot 2 must consist of RP2LO and RP2HI
+* Pot 3 must consist of RP3LO and RP3HI
+* Pot 4 must consist of RP4LO and RP4HI - this is curently inactive
+
+* Nodes 0 to 9 are reserved
 
 VIN 0 1 DC 0 AC 1
-RS 1 2 1
+RS 1 2 1.3K
 
-C1 2 4 470P
-R1 2 5 33K
+******* PLACE YOUR CIRCUIT HERE *******
 
-RTREBLEHI 4 7 110K
-RTREBLELO 7 6 110K
+R1 2 10 33K
+C1 2 11 470P
+C2 10 12 22N
+C3 10 13 22N
 
-C2 5 6 22N
-C3 5 8 22N
+RP1LO 14 12 500K
+RP1HI 12 12 500K
 
-RMIDHI 9 8 12.5K
-RMIDLO 8 0 12.5K
+RP2LO 0 13 12.5K
+RP2HI 13 14 12.5K
 
-RBASSHI 6 6 500K
-RBASSLO 6 9 500K
+RP3LO 12 3 110K
+RP3HI 3 11 110K
 
-RVOLHI 7 3 1
-RVOLLO 3 0 1MEG
+******* PLACE YOUR CIRCUIT HERE *******
 
-RL 3 0 10MEG
+RVOLHI 3 4 1
+RVOLLO 4 0 1MEG
 
 .OPTIONS NOACCT
 .AC DEC 10 10 100K

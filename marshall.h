@@ -6,7 +6,7 @@
 class Marshall : public Circuit
 {
 public:
-    Marshall(Potentiometer *bass, Potentiometer *mid, Potentiometer *treble);
+    Marshall(Potentiometer *pot1, Potentiometer *pot2, Potentiometer *pot3, Potentiometer *pot4);
 
 private:
     const char *getFile();

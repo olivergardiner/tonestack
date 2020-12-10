@@ -1,4 +1,4 @@
-Vox circuit for tonestack
+Template circuit for tonestack
 
 * Insert you circuit in the area marked below - do not change anything else.
 * The input to your circuit is node 2 relative to node 0 which is ground
@@ -17,17 +17,19 @@ RS 1 2 56K
 
 ******* PLACE YOUR CIRCUIT HERE *******
 
-R1 2 10 100K
-C1 10 12 22N
-C2 10 13 22N
-C3 2 11 47P
-R2 12 0 10K
+* RP1LO 50 51 500K
+* RP1HI 51 52 500K
 
-RP1LO 12 13 500K
-RP1HI 0 12 500K
+* RP2LO 60 61 500K
+* RP2HI 61 62 500K
 
-RP3LO 13 3 500K
-RP3HI 3 11 500K
+* RP3LO 70 71 500K
+* RP3HI 71 72 500K
+
+* RP4LO 80 81 500K
+* RP4HI 81 82 500K
+
+R1 2 4 1M
 
 ******* PLACE YOUR CIRCUIT HERE *******
 

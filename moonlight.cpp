@@ -1,6 +1,6 @@
 #include "moonlight.h"
 
-Moonlight::Moonlight(Potentiometer *bass, Potentiometer *mid, Potentiometer *treble) : Circuit(bass, mid, treble)
+Moonlight::Moonlight(Potentiometer *pot1, Potentiometer *pot2, Potentiometer *pot3, Potentiometer *pot4) : Circuit(pot1, pot2, pot3, pot4)
 {
 
 }
@@ -12,8 +12,8 @@ const char *Moonlight::getFile()
 
 void Moonlight::setPotentiometers()
 {
-    bass->setVisible(false);
-    mid->setVisible(true);
-    mid->setPotentiometer(POT_LIN, 500000, 49, "Tone");
-    treble->setVisible(false);
+    pot1->setVisible(false);
+    pot2->setVisible(true);
+    pot2->setPotentiometer(POT_LIN, 500000, 49, "Tone");
+    pot3->setVisible(false);
 }

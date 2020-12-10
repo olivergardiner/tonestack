@@ -1,20 +1,33 @@
-Marshall 18W single control
+Marshall 18W circuit for tonestack
+
+* Insert you circuit in the area marked below - do not change anything else.
+* The input to your circuit is node 2 relative to node 0 which is ground
+* The output of your circuit must be node 3
+
+* Four potentiometers are nominally available for you to use in your circuit:
+* Pot 1 must consist of RP1LO and RP1HI
+* Pot 2 must consist of RP2LO and RP2HI
+* Pot 3 must consist of RP3LO and RP3HI
+* Pot 4 must consist of RP4LO and RP4HI - this is curently inactive
+
+* Nodes 0 to 9 are reserved
 
 VIN 0 1 DC 0 AC 1
-RS 1 2 47K
+RS 1 2 56K
 
-C1 2 4 10N
+******* PLACE YOUR CIRCUIT HERE *******
 
-RTONELO 4 0 250K
-RTONEHI 0 6 250K
+C1 2 10 10N
+R1 11 3 100K
+C2 2 3 4.7N
 
-R1 6 7 100K
-C2 2 7 4.7N
+RP2LO 10 0 500K
+RP2HI 0 11 500K
 
-RVOLHI 7 3 1
-RVOLLO 3 0 1MEG
+******* PLACE YOUR CIRCUIT HERE *******
 
-RL 3 0 1MEG
+RVOLHI 3 4 1
+RVOLLO 4 0 1MEG
 
 .OPTIONS NOACCT
 .AC DEC 10 10 100K

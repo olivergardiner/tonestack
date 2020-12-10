@@ -19,10 +19,9 @@ const char *circuitLabels[] = {
     "Marshall",
     "Vox",
     "James",
-    "Baxendall",
     "Marshall 18W",
-    "Moonlight",
-    "Big Muff"
+    "Moonlight"
+    // "Big Muff"
 };
 
 enum circuits {
@@ -30,10 +29,9 @@ enum circuits {
     CIR_MARSHALL,
     CIR_VOX,
     CIR_JAMES,
-    CIR_BAXENDALL,
     CIR_MARSHALL18,
     CIR_MOONLIGHT,
-    CIR_BIG_MUFF,
+    // CIR_BIG_MUFF,
     CIR_UNDEFINED
 };
 
@@ -45,22 +43,22 @@ ToneStackCalculator::ToneStackCalculator(QWidget *parent)
 
     ui->setupUi(this);
 
-    bass = new Potentiometer(ui->bassPosition, ui->bassValue, ui->bassType, ui->bassLabel, "Bass");
-    mid = new Potentiometer(ui->midPosition, ui->midValue, ui->midType, ui->midLabel, "Mid");
-    treble = new Potentiometer(ui->treblePosition, ui->trebleValue, ui->trebleType, ui->trebleLabel, "Treble");
+    pot1 = new Potentiometer(ui->pot1Position, ui->pot1Value, ui->pot1Type, ui->pot1Label, 1);
+    pot2 = new Potentiometer(ui->pot2Position, ui->pot2Value, ui->pot2Type, ui->pot2Label, 2);
+    pot3 = new Potentiometer(ui->pot3Position, ui->pot3Value, ui->pot3Type, ui->pot3Label, 3);
+    pot4 = nullptr;
 
-    fender = new Fender(bass, mid, treble);
-    marshall = new Marshall(bass, mid, treble);
-    vox = new Vox(bass, mid, treble);
-    marshall18 = new Marshall18(bass, mid, treble);
-    moonlight = new Moonlight(bass, mid, treble);
+    fender = new Fender(pot1, pot2, pot3, pot4);
+    marshall = new Marshall(pot1, pot2, pot3, pot4);
+    vox = new Vox(pot1, pot2, pot3, pot4);
+    james = new James(pot1, pot2, pot3, pot4);
+    marshall18 = new Marshall18(pot1, pot2, pot3, pot4);
+    moonlight = new Moonlight(pot1, pot2, pot3, pot4);
 
     buildFrequencyResponseScene();
     ui->frequencyResponse->setScene(&scene);
 
     buildCircuitSelection();
-
-    createPlot();
 }
 
 ToneStackCalculator::~ToneStackCalculator()
@@ -121,66 +119,59 @@ void ToneStackCalculator::on_actionQuit_triggered()
     QCoreApplication::quit();
 }
 
-void ToneStackCalculator::on_bassPosition_valueChanged(int value)
-{
-    bass->setPosition(value);
-
-    createPlot();
-}
-
-void ToneStackCalculator::on_midPosition_valueChanged(int value)
-{
-    mid->setPosition(value);
-
-    createPlot();
-}
-
-void ToneStackCalculator::on_treblePosition_valueChanged(int value)
-{
-    treble->setPosition(value);
-
-    createPlot();
-}
-
-void ToneStackCalculator::on_bassValue_textEdited(const QString &arg1)
-{
-
-}
-
-void ToneStackCalculator::on_midValue_textEdited(const QString &arg1)
-{
-
-}
-
-void ToneStackCalculator::on_trebleValue_textEdited(const QString &arg1)
-{
-
-}
-
-void ToneStackCalculator::on_bassType_currentIndexChanged(int index)
-{
-    bass->setType(index);
-
-    createPlot();
-}
-
-void ToneStackCalculator::on_midType_currentIndexChanged(int index)
-{
-    mid->setType(index);
-
-    createPlot();
-}
-
-void ToneStackCalculator::on_trebleType_currentIndexChanged(int index)
-{
-    treble->setType(index);
-
-    createPlot();
-}
-
 void ToneStackCalculator::on_stackSelection_currentIndexChanged(int index)
 {
     setStack(index);
+
+    createPlot();
+}
+
+void ToneStackCalculator::on_pot2Position_valueChanged(int value)
+{
+    pot2->setPosition(value);
+
+    createPlot();
+}
+
+void ToneStackCalculator::on_pot3Position_valueChanged(int value)
+{
+    pot3->setPosition(value);
+
+    createPlot();
+}
+
+void ToneStackCalculator::on_pot1Value_textEdited(const QString &arg1)
+{
+
+}
+
+void ToneStackCalculator::on_pot2Value_textEdited(const QString &arg1)
+{
+
+}
+
+void ToneStackCalculator::on_pot3Value_textEdited(const QString &arg1)
+{
+
+}
+
+void ToneStackCalculator::on_pot1Type_currentIndexChanged(int index)
+{
+    pot1->setType(index);
+
+    createPlot();
+}
+
+void ToneStackCalculator::on_pot2Type_currentIndexChanged(int index)
+{
+    pot2->setType(index);
+
+    createPlot();
+}
+
+void ToneStackCalculator::on_pot3Type_currentIndexChanged(int index)
+{
+    pot3->setType(index);
 
     createPlot();
 }
@@ -195,19 +186,22 @@ void ToneStackCalculator::setStack(int stack)
     Circuit *circuit;
 
     switch(stack) {
-    case 0: // Fender
+    case CIR_FENDER: // Fender
         circuit = fender;
         break;
-    case 1: // Marshall
+    case CIR_MARSHALL: // Marshall
         circuit = marshall;
         break;
-    case 2: // Vox
+    case CIR_VOX: // Vox
         circuit = vox;
         break;
-    case 5: // Marshall 18W
+    case CIR_JAMES: // James
+        circuit = james;
+        break;
+    case CIR_MARSHALL18: // Marshall 18W
         circuit = marshall18;
         break;
-    case 6: // Moonlight
+    case CIR_MOONLIGHT: // Moonlight
         circuit = moonlight;
         break;
     default:
@@ -246,13 +240,12 @@ void ToneStackCalculator::createPlot()
         return;
     }
 
-    pvector_info myvec = ngGet_Vec_Info(const_cast<char *>("V(3)"));
+    pvector_info myvec = ngGet_Vec_Info(const_cast<char *>("V(4)"));
     if (!myvec) {
         return;
     }
 
     int veclength = myvec->v_length;
-    printf("\nActual length of vector V(3) is %d\n\n", veclength);
 
      if (plot) {
         scene.removeItem(plot);
@@ -400,3 +393,11 @@ int ciprefix(const char* p, const char* s)
     }
     return (true);
 }
+
+void ToneStackCalculator::on_pot1Position_valueChanged(int value)
+{
+    pot1->setPosition(value);
+
+    createPlot();
+}
+

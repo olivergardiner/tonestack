@@ -11,6 +11,7 @@ CONFIG += c++11
 SOURCES += \
     circuit.cpp \
     fender.cpp \
+    james.cpp \
     main.cpp \
     marshall.cpp \
     marshall18.cpp \
@@ -23,6 +24,7 @@ HEADERS += \
     circuit.h \
     fender.h \
     fender.h \
+    james.h \
     marshall.h \
     marshall18.h \
     moonlight.h \

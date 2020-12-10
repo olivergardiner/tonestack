@@ -6,7 +6,7 @@
 class Moonlight : public Circuit
 {
 public:
-    Moonlight(Potentiometer *bass, Potentiometer *mid, Potentiometer *treble);
+    Moonlight(Potentiometer *pot1, Potentiometer *pot2, Potentiometer *pot3, Potentiometer *pot4);
 
 private:
     const char *getFile();

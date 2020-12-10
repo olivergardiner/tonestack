@@ -9,6 +9,8 @@
 
 #include "ngspice/sharedspice.h"
 
+#define POT_MAX 99
+
 typedef enum e_potType {
     POT_LIN,
     POT_LOG,
@@ -20,7 +22,7 @@ typedef enum e_potType {
 class Potentiometer
 {
 public:
-    Potentiometer(QDial *dial, QLineEdit *valueText, QComboBox *typeSelect, QLabel *label, const char *labelText);
+    Potentiometer(QDial *dial, QLineEdit *valueText, QComboBox *typeSelect, QLabel *label, int id);
 
     potType getType() const;
     void setType(const potType &type);
@@ -43,9 +45,10 @@ private:
     QLabel *label;
 
     const char *labelText;
-    potType type;
-    int value;
-    int position;
+    potType type = POT_LIN;
+    int value = 1000000;
+    int position = POT_MAX / 2;
+    int id;
 
     int getPotTypeIndex(potType type);
 
@@ -57,7 +60,5 @@ private:
 
     double logFunction(double x, double ym);
 };
-
-#define POT_MAX 99
 
 #endif // POTENTIOMETER_H

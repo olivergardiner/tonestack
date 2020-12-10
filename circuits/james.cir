@@ -1,4 +1,4 @@
-Vox circuit for tonestack
+James circuit for tonestack
 
 * Insert you circuit in the area marked below - do not change anything else.
 * The input to your circuit is node 2 relative to node 0 which is ground
@@ -18,16 +18,18 @@ RS 1 2 56K
 ******* PLACE YOUR CIRCUIT HERE *******
 
 R1 2 10 100K
-C1 10 12 22N
-C2 10 13 22N
-C3 2 11 47P
-R2 12 0 10K
+C1 10 11 470P
+C2 11 12 4.7N
+R3 12 0 10K
+R4 11 3 180K
+C3 2 13 330P
+C4 0 14 3.3N
 
-RP1LO 12 13 500K
-RP1HI 0 12 500K
+RP1LO 12 11 500K
+RP1HI 11 10 500K
 
-RP3LO 13 3 500K
-RP3HI 3 11 500K
+RP3LO 14 3 500K
+RP3HI 3 13 500K
 
 ******* PLACE YOUR CIRCUIT HERE *******
 
