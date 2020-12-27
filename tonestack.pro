@@ -9,22 +9,27 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    capacitor.cpp \
     circuit.cpp \
-    circuitsettings.cpp \
+    circuitelement.cpp \
+    inductor.cpp \
     main.cpp \
     potentiometer.cpp \
+    resistor.cpp \
     tonestackcalculator.cpp
 
 HEADERS += \
+    capacitor.h \
     circuit.h \
     circuitdefinitions.h \
-    circuitsettings.h \
+    circuitelement.h \
+    inductor.h \
     ngspice/sharedspice.h \
     potentiometer.h \
+    resistor.h \
     tonestackcalculator.h
 
 FORMS += \
-    circuitsettings.ui \
     tonestackcalculator.ui
 
 # Default rules for deployment.

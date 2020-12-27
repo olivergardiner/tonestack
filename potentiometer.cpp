@@ -1,13 +1,9 @@
 #include "potentiometer.h"
 
-#define spice(X) (ngSpice_Command(const_cast <char *>(X)))
-
-Potentiometer::Potentiometer(QDial * dial, QLineEdit * valueText, QComboBox * typeSelect, QLabel * label, int id)
+Potentiometer::Potentiometer(QDial *dial, QLineEdit *valueText, QComboBox *typeSelect, QLabel *label, int id) : Resistor(label, valueText, id)
 {
     this->dial = dial;
-    this->valueText = valueText;
     this->typeSelect = typeSelect;
-    this->label = label;
     this->id = id;
 }
 
@@ -30,33 +26,6 @@ void Potentiometer::setType(int index)
     potType type = (potType) index;
 
     this->type = type;
-
-    alterModel();
-}
-
-int Potentiometer::getValue() const
-{
-    return value;
-}
-
-void Potentiometer::setValue(int value)
-{
-    this->value = value;
-
-    char valueString[32] = "1";
-    double scaledValue;
-
-    if (value >= 1000000) {
-        scaledValue = ((double) value) / 1000000;
-        sprintf(valueString, "%.2fMEG", scaledValue);
-    } else if (value > 1000) {
-        scaledValue = ((double) value) / 1000;
-        sprintf(valueString, "%.2fK", scaledValue);
-    } else {
-        sprintf(valueString, "%d", value);
-    }
-
-    valueText->setText(valueString);
 
     alterModel();
 }
@@ -101,10 +70,10 @@ void Potentiometer::setPotentiometer(pot *value, int position)
 
 void Potentiometer::setVisible(bool visible)
 {
+    CircuitElement::setVisible(visible);
+
     dial->setVisible(visible);
-    valueText->setVisible(visible);
     typeSelect->setVisible(visible);
-    label->setVisible(visible);
 }
 
 void Potentiometer::alterModel()

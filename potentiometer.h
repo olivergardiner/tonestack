@@ -7,6 +7,7 @@
 #include <QComboBox>
 #include <QLabel>
 
+#include "resistor.h"
 #include "ngspice/sharedspice.h"
 
 #define POT_MAX 99
@@ -25,7 +26,7 @@ typedef struct pot {
     e_potType type;
 } pot;
 
-class Potentiometer
+class Potentiometer : public Resistor
 {
 public:
     Potentiometer(QDial *dial, QLineEdit *valueText, QComboBox *typeSelect, QLabel *label, int id);
@@ -33,9 +34,6 @@ public:
     potType getType() const;
     void setType(const potType &type);
     void setType(int index);
-
-    int getValue() const;
-    void setValue(int value);
 
     int getPosition() const;
     void setPosition(int position);
@@ -47,13 +45,10 @@ public:
 
 private:
     QDial *dial;
-    QLineEdit *valueText;
     QComboBox *typeSelect;
-    QLabel *label;
 
     const char *labelText;
     potType type = POT_LIN;
-    int value = 1000000;
     int position = POT_MAX / 2;
     int id;
 

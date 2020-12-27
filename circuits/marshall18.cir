@@ -13,7 +13,7 @@ Marshall 18W circuit for tonestack
 * Nodes 0 to 9 are reserved
 
 VIN 0 1 DC 0 AC 1
-RS 1 2 56K
+R98 1 2 56K
 
 ******* PLACE YOUR CIRCUIT HERE *******
 
@@ -26,8 +26,7 @@ RP2HI 0 11 500K
 
 ******* PLACE YOUR CIRCUIT HERE *******
 
-RVOLHI 3 4 1
-RVOLLO 4 0 1MEG
+R99 3 0 1MEG
 
 .OPTIONS NOACCT
 .AC DEC 10 10 100K
