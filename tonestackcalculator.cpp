@@ -337,6 +337,8 @@ char *ToneStackCalculator::toString(QString source)
     }
     text[i] = 0;
 
+    fprintf(stderr, "Value = %s\n", text);
+
     return _strdup(text);
 }
 
