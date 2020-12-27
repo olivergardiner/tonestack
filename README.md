@@ -6,4 +6,6 @@ The original TSC was a very useful little tool for getting a feel for how differ
 
 This is a QT Creator project and needs packaging with QT's windeployqt.
 
-The current version demonstrates the principle with a few stacks that were very easy to create as Spice files and the responses tally well with the outputs of the TSC. It does not currently show the pictures of the circuit and it only allows you to change the parameters of the pots, not the whole circuit but I plan to add this in due course.
+The current version demonstrates the principle with a few stacks that were very easy to create as Spice files and the responses tally well with the outputs of the TSC. It now shows the pictures of the circuit but it only allows you to change the parameters of the pots, not the whole circuit but I plan to add this in due course.
+
+The framework for adding circuits has now been simplified - it now uses a simple config structure to define each circuit.
