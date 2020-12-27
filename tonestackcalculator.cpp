@@ -5,6 +5,8 @@
 #include <windows.h>
 #endif
 
+#include "circuitdefinitions.h"
+
 bool no_bg = true;
 int vecgetnumber = 0;
 double v2dat;
@@ -13,27 +15,6 @@ bool errorflag = false;
 
 #define spice(X) (ngSpice_Command(const_cast <char *>(X)))
 #define magnitude(X) (sqrt(X.cx_real * X.cx_real + X.cx_imag * X.cx_imag))
-
-const char *circuitLabels[] = {
-    "Fender",
-    "Marshall",
-    "Vox",
-    "James",
-    "Marshall 18W",
-    "Moonlight"
-    // "Big Muff"
-};
-
-enum circuits {
-    CIR_FENDER,
-    CIR_MARSHALL,
-    CIR_VOX,
-    CIR_JAMES,
-    CIR_MARSHALL18,
-    CIR_MOONLIGHT,
-    // CIR_BIG_MUFF,
-    CIR_UNDEFINED
-};
 
 ToneStackCalculator::ToneStackCalculator(QWidget *parent)
     : QMainWindow(parent)
@@ -46,14 +27,9 @@ ToneStackCalculator::ToneStackCalculator(QWidget *parent)
     pot1 = new Potentiometer(ui->pot1Position, ui->pot1Value, ui->pot1Type, ui->pot1Label, 1);
     pot2 = new Potentiometer(ui->pot2Position, ui->pot2Value, ui->pot2Type, ui->pot2Label, 2);
     pot3 = new Potentiometer(ui->pot3Position, ui->pot3Value, ui->pot3Type, ui->pot3Label, 3);
-    pot4 = nullptr;
+    pot4 = nullptr; // Not yet supported by the UI
 
-    fender = new Fender(pot1, pot2, pot3, pot4);
-    marshall = new Marshall(pot1, pot2, pot3, pot4);
-    vox = new Vox(pot1, pot2, pot3, pot4);
-    james = new James(pot1, pot2, pot3, pot4);
-    marshall18 = new Marshall18(pot1, pot2, pot3, pot4);
-    moonlight = new Moonlight(pot1, pot2, pot3, pot4);
+    circuit = new Circuit(definitions, pot1, pot2, pot3, pot4);
 
     buildFrequencyResponseScene();
     ui->frequencyResponse->setScene(&scene);
@@ -103,7 +79,7 @@ void ToneStackCalculator::buildFrequencyResponseScene()
 void ToneStackCalculator::buildCircuitSelection()
 {
     for (int i=0; i < CIR_UNDEFINED; i++) {
-        ui->stackSelection->addItem(circuitLabels[i]);
+        ui->stackSelection->addItem(definitions[i].circuitLabel);
     }
 
     ui->stackSelection->setCurrentIndex(0);
@@ -122,6 +98,13 @@ void ToneStackCalculator::on_actionQuit_triggered()
 void ToneStackCalculator::on_stackSelection_currentIndexChanged(int index)
 {
     setStack(index);
+
+    createPlot();
+}
+
+void ToneStackCalculator::on_pot1Position_valueChanged(int value)
+{
+    pot1->setPosition(value);
 
     createPlot();
 }
@@ -183,32 +166,11 @@ void ToneStackCalculator::setStack(int stack)
         spice("reset");
     }
 
-    Circuit *circuit;
+    circuit->setCurrentCircuit(stack);
 
-    switch(stack) {
-    case CIR_FENDER: // Fender
-        circuit = fender;
-        break;
-    case CIR_MARSHALL: // Marshall
-        circuit = marshall;
-        break;
-    case CIR_VOX: // Vox
-        circuit = vox;
-        break;
-    case CIR_JAMES: // James
-        circuit = james;
-        break;
-    case CIR_MARSHALL18: // Marshall 18W
-        circuit = marshall18;
-        break;
-    case CIR_MOONLIGHT: // Moonlight
-        circuit = moonlight;
-        break;
-    default:
-        circuit = marshall;
-    }
-
-    circuit->load();
+    QPixmap circuitImage(circuit->getImage());
+    circuitImage = circuitImage.scaled(339, 267, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    ui->circuitDisplay->setPixmap(circuitImage);
 }
 
 bool ToneStackCalculator::waitSimulationEnd()
@@ -394,10 +356,7 @@ int ciprefix(const char* p, const char* s)
     return (true);
 }
 
-void ToneStackCalculator::on_pot1Position_valueChanged(int value)
+void ToneStackCalculator::on_pushButton_clicked()
 {
-    pot1->setPosition(value);
-
-    createPlot();
+    circuit->edit();
 }
-

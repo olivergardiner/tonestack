@@ -8,19 +8,7 @@
 #include "ngspice/sharedspice.h"
 
 #include "potentiometer.h"
-#include "fender.h"
-#include "marshall.h"
-#include "vox.h"
-#include "james.h"
-#include "marshall18.h"
-#include "moonlight.h"
-
-typedef enum e_potFunction {
-    POT_BASS,
-    POT_MIDDLE,
-    POT_TREBLE,
-    POT_ALL
-} potFunction;
+#include "circuit.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class ToneStackCalculator; }
@@ -59,12 +47,17 @@ private slots:
 
     void on_pot3Type_currentIndexChanged(int index);
 
+    void on_pushButton_clicked();
+
 private:
     Ui::ToneStackCalculator *ui;
 
     QGraphicsScene scene;
+    QGraphicsScene circuitScene;
 
     QGraphicsItemGroup *plot = nullptr;
+
+    QImage *circuitImage = nullptr;
 
     qreal decade;
 
@@ -73,12 +66,7 @@ private:
     Potentiometer *pot3;
     Potentiometer *pot4;
 
-    Fender *fender;
-    Marshall *marshall;
-    Vox *vox;
-    James *james;
-    Marshall18 *marshall18;
-    Moonlight *moonlight;
+    Circuit *circuit;
 
     void buildFrequencyResponseScene();
 

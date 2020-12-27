@@ -8,7 +8,7 @@ Vox circuit for tonestack
 * Pot 1 must consist of RP1LO and RP1HI
 * Pot 2 must consist of RP2LO and RP2HI
 * Pot 3 must consist of RP3LO and RP3HI
-* Pot 4 must consist of RP4LO and RP4HI - this is curently inactive
+* Pot 4 must consist of RP4LO and RP4HI - this is currently inactive
 
 * Nodes 0 to 9 are reserved
 
@@ -23,9 +23,11 @@ C2 10 13 22N
 C3 2 11 47P
 R2 12 0 10K
 
+* Bass 1M LogA
 RP1LO 12 13 500K
 RP1HI 0 12 500K
 
+Treble 1M Log A
 RP3LO 13 3 500K
 RP3HI 3 11 500K
 

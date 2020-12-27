@@ -19,6 +19,12 @@ typedef enum e_potType {
     POT_STYPE
 } potType;
 
+typedef struct pot {
+    char label[32];
+    int value;
+    e_potType type;
+} pot;
+
 class Potentiometer
 {
 public:
@@ -35,6 +41,7 @@ public:
     void setPosition(int position);
 
     void setPotentiometer(potType type, int value, int position, const char *label);
+    void setPotentiometer(pot *value, int position);
 
     void setVisible(bool visible);
 

@@ -20,14 +20,14 @@ void Potentiometer::setType(const potType &type)
 {
     this->type = type;
 
-    typeSelect->setCurrentIndex(getPotTypeIndex(type));
+    typeSelect->setCurrentIndex(type);
 
     alterModel();
 }
 
 void Potentiometer::setType(int index)
 {
-    potType type = getPotType(index);
+    potType type = (potType) index;
 
     this->type = type;
 
@@ -87,58 +87,24 @@ void Potentiometer::setPotentiometer(potType type, int value, int position, cons
     alterModel();
 }
 
+void Potentiometer::setPotentiometer(pot *value, int position)
+{
+    setType(value->type);
+    setValue(value->value);
+    labelText = value->label;
+    label->setText(labelText);
+
+    setPosition(position);
+
+    alterModel();
+}
+
 void Potentiometer::setVisible(bool visible)
 {
     dial->setVisible(visible);
     valueText->setVisible(visible);
     typeSelect->setVisible(visible);
     label->setVisible(visible);
-}
-
-int Potentiometer::getPotTypeIndex(potType type)
-{
-    switch (type) {
-    case POT_LIN:
-        return 0;
-        break;
-    case POT_LOG:
-        return 1;
-        break;
-    case POT_LOGA:
-        return 2;
-        break;
-    case POT_RLOG:
-        return 3;
-        break;
-    case POT_STYPE:
-        return 4;
-        break;
-    }
-
-    return 0;
-}
-
-potType Potentiometer::getPotType(int index)
-{
-    switch (index) {
-    case 0:
-        return POT_LIN;
-        break;
-    case 1:
-        return POT_LOG;
-        break;
-    case 2:
-        return POT_LOGA;
-        break;
-    case 3:
-        return POT_RLOG;
-        break;
-    case 4:
-        return POT_STYPE;
-        break;
-    }
-
-    return POT_LIN;
 }
 
 void Potentiometer::alterModel()

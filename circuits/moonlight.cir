@@ -8,7 +8,7 @@ Moonlight circuit for tonestack
 * Pot 1 must consist of RP1LO and RP1HI
 * Pot 2 must consist of RP2LO and RP2HI
 * Pot 3 must consist of RP3LO and RP3HI
-* Pot 4 must consist of RP4LO and RP4HI - this is curently inactive
+* Pot 4 must consist of RP4LO and RP4HI - this is cuurently inactive
 
 * Nodes 0 to 9 are reserved
 

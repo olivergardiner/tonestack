@@ -10,30 +10,21 @@ CONFIG += c++11
 
 SOURCES += \
     circuit.cpp \
-    fender.cpp \
-    james.cpp \
+    circuitsettings.cpp \
     main.cpp \
-    marshall.cpp \
-    marshall18.cpp \
-    moonlight.cpp \
     potentiometer.cpp \
-    tonestackcalculator.cpp \
-    vox.cpp
+    tonestackcalculator.cpp
 
 HEADERS += \
     circuit.h \
-    fender.h \
-    fender.h \
-    james.h \
-    marshall.h \
-    marshall18.h \
-    moonlight.h \
+    circuitdefinitions.h \
+    circuitsettings.h \
     ngspice/sharedspice.h \
     potentiometer.h \
-    tonestackcalculator.h \
-    vox.h
+    tonestackcalculator.h
 
 FORMS += \
+    circuitsettings.ui \
     tonestackcalculator.ui
 
 # Default rules for deployment.
