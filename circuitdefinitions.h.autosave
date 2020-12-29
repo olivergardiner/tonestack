@@ -1,0 +1,203 @@
+#ifndef CIRCUITDEFINITIONS_H
+#define CIRCUITDEFINITIONS_H
+
+#include "circuit.h"
+
+// Always add to the end of this list - this enum defines the length of the defitionions array but not its order
+// The values are used as circuit identifiers for saved circuits
+enum circuits {
+    CIR_FENDER,
+    CIR_MARSHALL,
+    CIR_VOX,
+    CIR_JAMES,
+    CIR_BAXANDALL,
+    CIR_VOIGT,
+    CIR_BONERAY,
+    CIR_BANDMASTER,
+    CIR_TUBEDRIVER,
+    CIR_MARSHALL18,
+    CIR_MOONLIGHT,
+    // Define the next circuit i
+    CIR_UNDEFINED
+};
+
+circuitDefinition definitions[] = {
+    {
+        CIR_FENDER,
+        "Fender",
+        "../circuits/fender.png",
+        "source ../circuits/fender.cir",
+        38000,
+        500000,
+        3,
+        { { "Bass", 250000, POT_LOGA }, { "Mid", 10000, POT_LIN }, { "Treble", 250000, POT_LOGA } },
+        1,
+        { 100000 }, // R1 = 100K
+        3,
+        { 270, 100000, 47000 }, // C1 = 270P, C2 = 100N, C3 = 47N
+        0,
+        {}
+    },
+    {
+        CIR_MARSHALL,
+        "Marshall",
+        "../circuits/marshall.png",
+        "source ../circuits/marshall.cir",
+        1300,
+        1000000,
+        3,
+        { { "Bass", 1000000, POT_LOG }, { "Mid", 25000, POT_LIN }, { "Treble", 220000, POT_LIN } },
+        1,
+        { 33000 }, // R1 = 33K
+        3,
+        { 470, 22000, 22000 }, // C1 = 470P, C2 = 22N, C3 = 22N
+        0,
+        {}
+    },
+    {
+        CIR_VOX,
+        "Vox",
+        "../circuits/vox.png",
+        "source ../circuits/vox.cir",
+        56000,
+        600000,
+        2,
+        { { "Bass", 1000000, POT_LOGA }, { "Treble", 1000000, POT_LOGA } },
+        2,
+        { 100000, 10000 }, // R1 = 100K, R2 = 10K
+        3,
+        { 22000, 22000, 47 }, // C1 = 22N, C2 = 22N, C3 = 47P
+        0,
+        {}
+    },
+    {
+        CIR_JAMES,
+        "James",
+        "../circuits/james.png",
+        "source ../circuits/james.cir",
+        38000,
+        1000000,
+        2,
+        { { "Bass", 1000000, POT_LOG }, { "Treble", 470000, POT_LOG } },
+        3,
+        { 100000, 10000, 180000 }, // R1 = 100K, R2 = 10K, R3 = 180K
+        4,
+        { 470, 4700, 330, 3300 }, // C1 = 470P, C2 = 4.7N, C3 = 330P, C4 = 3.3N
+        0,
+        {}
+    },
+    {
+        CIR_BAXANDALL,
+        "Baxandall",
+        "../circuits/baxandall.png",
+        "source ../circuits/baxandall.cir",
+        38000,
+        1000000,
+        2,
+        { { "Bass", 1000000, POT_LIN }, { "Treble", 1000000, POT_LIN } },
+        3,
+        { 100000, 100000, 100000 }, // R1 = 100K, R2 = 100K, R3 = 100K
+        3,
+        { 10000, 10000, 1000 }, // C1 = 10N, C2 = 10N, C3 = 1N
+        0,
+        {}
+    },
+    {
+        CIR_VOIGT,
+        "Voigt",
+        "../circuits/voigt.png",
+        "source ../circuits/voigt.cir",
+        38000,
+        1000000,
+        2,
+        { { "Bass", 1000000, POT_LOG }, { "Treble", 220000, POT_LOG } },
+        3,
+        { 470000, 1000000, 220000 }, // R1 = 470K, R2 = 1M, R3 = 220K
+        2,
+        { 1000, 4700 }, // C1 = 1N, C2 = 4.7N
+        0,
+        {}
+    },
+    {
+        CIR_BONERAY,
+        "Bone Ray",
+        "../circuits/boneray.png",
+        "source ../circuits/boneray.cir",
+        38000,
+        1000000,
+        2,
+        { { "Tilt", 1000000, POT_LIN }, { "Mid", 1000000, POT_LIN } },
+        2,
+        { 470000, 470000 }, // R1 = 470K, R2 = 470K
+        4,
+        { 220, 1000, 4700, 4700 }, // C1 = 220P, C2 = 1N, C3 = 4.7N, C4 = 4.7N
+        0,
+        {}
+    },
+    {
+        CIR_BANDMASTER,
+        "Bandmaster",
+        "../circuits/bandmaster.png",
+        "source ../circuits/bandmaster.cir",
+        38000,
+        1000000,
+        2,
+        { { "Bass", 470000, POT_LOGA }, { "Treble", 470000, POT_LIN } },
+        2,
+        { 220000, 22000 }, // R1 = 220K, R2 = 22K
+        2,
+        { 470, 10000 }, // C1 = 470P, C2 = 10N
+        0,
+        {}
+    },
+    {
+        CIR_TUBEDRIVER,
+        "Tube Driver",
+        "../circuits/tubedriver.png",
+        "source ../circuits/tubedriver.cir",
+        38000,
+        100000,
+        2,
+        { { "Bass", 100000, POT_LOG }, { "Treble", 500000, POT_LOG } },
+        3,
+        { 22000, 22000, 220000 }, // R1 = 22K, R2 = 22K, R3 = 220K
+        4,
+        { 330, 100000, 47000, 47000 }, // C1 = 330P, C2 = 100N, C3 = 47N, C4 = 47N
+        0,
+        {}
+    },
+    {
+        CIR_MARSHALL18,
+        "Marhsall 18W",
+        "../circuits/marshall18.png",
+        "source ../circuits/marshall18.cir",
+        1300,
+        1000000,
+        1,
+        { { "Tone", 500000, POT_LIN } },
+        1,
+        { 100000 }, // R1 = 100K
+        2,
+        { 10000, 4700 }, // C1 = 10N, C2 = 4.7N
+        0,
+        {}
+    },
+    {
+        CIR_MOONLIGHT,
+        "Moonlight",
+        "../circuits/moonlight.png",
+        "source ../circuits/moonlight.cir",
+        38000,
+        1000000,
+        1,
+        { { "Tone", 500000, POT_LIN } },
+        3,
+        { 220000, 470000, 270000 }, // R1 = 220K, R2 = 470K, R3 = 270K
+        1,
+        { 250 }, // C1 = 250P
+        0,
+        {}
+    }
+};
+
+#endif // CIRCUITDEFINITIONS_H

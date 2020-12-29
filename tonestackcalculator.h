@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QGraphicsScene>
 #include <QGraphicsItemGroup>
+#include <QFileDialog>
 
 #include "ngspice/sharedspice.h"
 
@@ -86,6 +87,12 @@ private slots:
 
     void on_resetButton_clicked();
 
+    void on_actionOpen_triggered();
+
+    void on_actionSave_triggered();
+
+    void on_actionSave_As_triggered();
+
 private:
     Ui::ToneStackCalculator *ui;
 
@@ -98,19 +105,11 @@ private:
 
     qreal decade;
 
-    Potentiometer *pot1;
-    Potentiometer *pot2;
-    Potentiometer *pot3;
-    Potentiometer *pot4;
-
-    Resistor *resistors[5];
-    Capacitor *capacitors[5];
-    Inductor *inductors[5];
-
-    Resistor *rS;
-    Resistor *rL;
+    circuitUiMap uiMap;
 
     Circuit *circuit;
+
+    QString filename;
 
     void buildFrequencyResponseScene();
 
@@ -123,6 +122,8 @@ private:
     void setStack(int stack);
 
     char *toString(QString source);
+
+    void saveCircuit();
 };
 
 int ng_getchar(char* outputreturn, int ident, void* userdata);

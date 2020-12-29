@@ -12,18 +12,18 @@
 
 #define POT_MAX 99
 
-typedef enum e_potType {
+enum potType {
     POT_LIN,
     POT_LOG,
     POT_LOGA,
     POT_RLOG,
     POT_STYPE
-} potType;
+};
 
 typedef struct pot {
     char label[32];
     int value;
-    e_potType type;
+    potType type;
 } pot;
 
 class Potentiometer : public Resistor
@@ -32,7 +32,6 @@ public:
     Potentiometer(QDial *dial, QLineEdit *valueText, QComboBox *typeSelect, QLabel *label, int id);
 
     potType getType() const;
-    void setType(const potType &type);
     void setType(int index);
 
     int getPosition() const;
@@ -41,7 +40,11 @@ public:
     void setPotentiometer(potType type, int value, int position, const char *label);
     void setPotentiometer(pot *value, int position);
 
+    void setLabel(const char *label);
     void setVisible(bool visible);
+
+    void read(const QJsonObject &json);
+    void write(QJsonObject &json) const;
 
 private:
     QDial *dial;

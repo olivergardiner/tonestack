@@ -1,0 +1,39 @@
+Fender Bandmaster circuit for tonestack
+
+* Insert you circuit in the area marked below - do not change anything else.
+* The input to your circuit is node 2 relative to node 0 which is ground
+* The output of your circuit must be node 3
+
+* Four potentiometers are nominally available for you to use in your circuit:
+* Pot 1 must consist of RP1LO and RP1HI
+* Pot 2 must consist of RP2LO and RP2HI
+* Pot 3 must consist of RP3LO and RP3HI
+* Pot 4 must consist of RP4LO and RP4HI - this is currently inactive
+
+* Nodes 0 to 9 are reserved
+
+VIN 0 1 DC 0 AC 1
+R98 1 2 1K
+
+******* PLACE YOUR CIRCUIT HERE *******
+
+R1 2 10 470K
+R2 11 12 1MEG
+R3 11 13 220K
+C1 2 12 1N
+C2 0 13 4.7N
+
+RP1LO 0 11 100K
+RP1HI 11 10 900K
+
+RP3LO 13 3 20K
+RP3HI 3 12 200K
+
+******* PLACE YOUR CIRCUIT HERE *******
+
+R99 3 0 1MEG
+
+.OPTIONS NOACCT
+.AC DEC 10 10 100K
+
+.END

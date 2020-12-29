@@ -12,20 +12,12 @@ potType Potentiometer::getType() const
     return type;
 }
 
-void Potentiometer::setType(const potType &type)
-{
-    this->type = type;
-
-    typeSelect->setCurrentIndex(type);
-
-    alterModel();
-}
-
 void Potentiometer::setType(int index)
 {
     potType type = (potType) index;
 
     this->type = type;
+    typeSelect->setCurrentIndex(index);
 
     alterModel();
 }
@@ -46,14 +38,16 @@ void Potentiometer::setPosition(int position)
 
 void Potentiometer::setPotentiometer(potType type, int value, int position, const char *labelText)
 {
-    setType(type);
-    setValue(value);
-    setPosition(position);
+    this->type = type;
+    typeSelect->setCurrentIndex(type);
+
+    this->position = position;
+    dial->setValue(position);
 
     this->labelText = labelText;
     label->setText(labelText);
 
-    alterModel();
+    setValue(value);
 }
 
 void Potentiometer::setPotentiometer(pot *value, int position)
@@ -68,12 +62,41 @@ void Potentiometer::setPotentiometer(pot *value, int position)
     alterModel();
 }
 
+void Potentiometer::setLabel(const char *labelText)
+{
+    this->labelText = labelText;
+    label->setText(labelText);
+}
+
 void Potentiometer::setVisible(bool visible)
 {
     CircuitElement::setVisible(visible);
 
     dial->setVisible(visible);
     typeSelect->setVisible(visible);
+}
+
+void Potentiometer::read(const QJsonObject &json)
+{
+    Resistor::read(json);
+
+    if (json.contains("type") && json["type"].isDouble()) {
+        type = (potType) json["type"].toInt();
+    }
+
+    typeSelect->setCurrentIndex(type);
+
+    position = 49;
+    dial->setValue(position);
+
+    setValue(value);
+}
+
+void Potentiometer::write(QJsonObject &json) const
+{
+    Resistor::write(json);
+
+    json["type"] = type;
 }
 
 void Potentiometer::alterModel()

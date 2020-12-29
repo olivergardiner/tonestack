@@ -22,35 +22,42 @@ ToneStackCalculator::ToneStackCalculator(QWidget *parent)
 {
     ngSpice_Init(ng_getchar, ng_getstat, ng_exit, ng_data, ng_initdata, ng_thread_runs, NULL);
 
+    filename = tr("");
+
     ui->setupUi(this);
 
-    pot1 = new Potentiometer(ui->pot1Position, ui->pot1Value, ui->pot1Type, ui->pot1Label, 1);
-    pot2 = new Potentiometer(ui->pot2Position, ui->pot2Value, ui->pot2Type, ui->pot2Label, 2);
-    pot3 = new Potentiometer(ui->pot3Position, ui->pot3Value, ui->pot3Type, ui->pot3Label, 3);
-    pot4 = nullptr; // Not yet supported by the UI
+    uiMap.pot1 = new Potentiometer(ui->pot1Position, ui->pot1Value, ui->pot1Type, ui->pot1Label, 1);
+    uiMap.pot2 = new Potentiometer(ui->pot2Position, ui->pot2Value, ui->pot2Type, ui->pot2Label, 2);
+    uiMap.pot3 = new Potentiometer(ui->pot3Position, ui->pot3Value, ui->pot3Type, ui->pot3Label, 3);
+    uiMap.pot4 = nullptr; // Not yet supported by the UI
 
-    resistors[0] = new Resistor(ui->r1Label, ui->r1Value, 1);
-    resistors[1] = new Resistor(ui->r2Label, ui->r2Value, 2);
-    resistors[2] = new Resistor(ui->r3Label, ui->r3Value, 3);
-    resistors[3] = new Resistor(ui->r4Label, ui->r4Value, 4);
-    resistors[4] = new Resistor(ui->r5Label, ui->r5Value, 5);
+    uiMap.resistors[0] = new Resistor(ui->r1Label, ui->r1Value, 1);
+    uiMap.resistors[1] = new Resistor(ui->r2Label, ui->r2Value, 2);
+    uiMap.resistors[2] = new Resistor(ui->r3Label, ui->r3Value, 3);
+    uiMap.resistors[3] = new Resistor(ui->r4Label, ui->r4Value, 4);
+    uiMap.resistors[4] = new Resistor(ui->r5Label, ui->r5Value, 5);
 
-    capacitors[0] = new Capacitor(ui->c1Label, ui->c1Value, 1);
-    capacitors[1] = new Capacitor(ui->c2Label, ui->c2Value, 2);
-    capacitors[2] = new Capacitor(ui->c3Label, ui->c3Value, 3);
-    capacitors[3] = new Capacitor(ui->c4Label, ui->c4Value, 4);
-    capacitors[4] = new Capacitor(ui->c5Label, ui->c5Value, 5);
+    uiMap.capacitors[0] = new Capacitor(ui->c1Label, ui->c1Value, 1);
+    uiMap.capacitors[1] = new Capacitor(ui->c2Label, ui->c2Value, 2);
+    uiMap.capacitors[2] = new Capacitor(ui->c3Label, ui->c3Value, 3);
+    uiMap.capacitors[3] = new Capacitor(ui->c4Label, ui->c4Value, 4);
+    uiMap.capacitors[4] = new Capacitor(ui->c5Label, ui->c5Value, 5);
 
-    inductors[0] = new Inductor(ui->l1Label, ui->l1Value, 1);
-    inductors[1] = new Inductor(ui->l2Label, ui->l2Value, 2);
-    inductors[2] = new Inductor(ui->l3Label, ui->l3Value, 3);
-    inductors[3] = new Inductor(ui->l4Label, ui->l4Value, 4);
-    inductors[4] = new Inductor(ui->l5Label, ui->l5Value, 5);
+    uiMap.inductors[0] = new Inductor(ui->l1Label, ui->l1Value, 1);
+    uiMap.inductors[1] = new Inductor(ui->l2Label, ui->l2Value, 2);
+    uiMap.inductors[2] = new Inductor(ui->l3Label, ui->l3Value, 3);
+    uiMap.inductors[3] = new Inductor(ui->l4Label, ui->l4Value, 4);
+    uiMap.inductors[4] = new Inductor(ui->l5Label, ui->l5Value, 5);
 
-    rS = new Resistor(ui->rSLabel, ui->rSValue, 98);
-    rL = new Resistor(ui->rLLabel, ui->rLValue, 99);
+    uiMap.rS = new Resistor(ui->rSLabel, ui->rSValue, 98);
+    uiMap.rL = new Resistor(ui->rLLabel, ui->rLValue, 99);
 
-    circuit = new Circuit(definitions, pot1, pot2, pot3, pot4, resistors, capacitors, inductors, rS, rL);
+    uiMap.circuits = CIR_UNDEFINED;
+    uiMap.circuitDisplay = ui->circuitDisplay;
+    uiMap.stackSelection = ui->stackSelection;
+    uiMap.definitions = definitions;
+
+    circuit = new Circuit(&uiMap);
 
     buildFrequencyResponseScene();
     ui->frequencyResponse->setScene(&scene);
@@ -139,9 +146,8 @@ void ToneStackCalculator::setStack(int stack)
 
     circuit->setCurrentCircuit(stack);
 
-    QPixmap circuitImage(circuit->getImage());
-    circuitImage = circuitImage.scaled(339, 267, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-    ui->circuitDisplay->setPixmap(circuitImage);
+    filename = tr("");
+    ui->actionSave->setEnabled(false);
 }
 
 bool ToneStackCalculator::waitSimulationEnd()
@@ -201,6 +207,26 @@ void ToneStackCalculator::createPlot()
     }
 
     plot = scene.createItemGroup(segments);
+}
+
+char *ToneStackCalculator::toString(QString source)
+{
+    char text[64];
+
+    int i = 0;
+    for (i = 0; i < source.length(); i++) {
+        text[i] = source.at(i).toLatin1();
+    }
+    text[i] = 0;
+
+    fprintf(stderr, "Value = %s\n", text);
+
+    return _strdup(text);
+}
+
+void ToneStackCalculator::saveCircuit()
+{
+
 }
 
 /* Callback function called from bg thread in ngspice to transfer
@@ -327,21 +353,6 @@ int ciprefix(const char* p, const char* s)
     return (true);
 }
 
-char *ToneStackCalculator::toString(QString source)
-{
-    char text[64];
-
-    int i = 0;
-    for (i = 0; i < source.length(); i++) {
-        text[i] = source.at(i).toLatin1();
-    }
-    text[i] = 0;
-
-    fprintf(stderr, "Value = %s\n", text);
-
-    return _strdup(text);
-}
-
 void ToneStackCalculator::on_actionAbout_triggered()
 {
 
@@ -361,182 +372,182 @@ void ToneStackCalculator::on_stackSelection_currentIndexChanged(int index)
 
 void ToneStackCalculator::on_pot1Position_valueChanged(int value)
 {
-    pot1->setPosition(value);
+    uiMap.pot1->setPosition(value);
 
     createPlot();
 }
 
 void ToneStackCalculator::on_pot2Position_valueChanged(int value)
 {
-    pot2->setPosition(value);
+    uiMap.pot2->setPosition(value);
 
     createPlot();
 }
 
 void ToneStackCalculator::on_pot3Position_valueChanged(int value)
 {
-    pot3->setPosition(value);
+    uiMap.pot3->setPosition(value);
 
     createPlot();
 }
 
 void ToneStackCalculator::on_pot1Type_currentIndexChanged(int index)
 {
-    pot1->setType(index);
+    uiMap.pot1->setType(index);
 
     createPlot();
 }
 
 void ToneStackCalculator::on_pot2Type_currentIndexChanged(int index)
 {
-    pot2->setType(index);
+    uiMap.pot2->setType(index);
 
     createPlot();
 }
 
 void ToneStackCalculator::on_pot3Type_currentIndexChanged(int index)
 {
-    pot3->setType(index);
+    uiMap.pot3->setType(index);
 
     createPlot();
 }
 
 void ToneStackCalculator::on_pot1Value_editingFinished()
 {
-    pot1->setTextValue(toString(ui->pot1Value->text()));
+    uiMap.pot1->setTextValue(toString(ui->pot1Value->text()));
 
     createPlot();
 }
 
 void ToneStackCalculator::on_pot2Value_editingFinished()
 {
-    pot2->setTextValue(toString(ui->pot2Value->text()));
+    uiMap.pot2->setTextValue(toString(ui->pot2Value->text()));
 
     createPlot();
 }
 
 void ToneStackCalculator::on_pot3Value_editingFinished()
 {
-    pot3->setTextValue(toString(ui->pot3Value->text()));
+    uiMap.pot3->setTextValue(toString(ui->pot3Value->text()));
 
     createPlot();
 }
 
 void ToneStackCalculator::on_r1Value_editingFinished()
 {
-    resistors[0]->setTextValue(toString(ui->r1Value->text()));
+    uiMap.resistors[0]->setTextValue(toString(ui->r1Value->text()));
 
     createPlot();
 }
 
 void ToneStackCalculator::on_r2Value_editingFinished()
 {
-    resistors[1]->setTextValue(toString(ui->r2Value->text()));
+    uiMap.resistors[1]->setTextValue(toString(ui->r2Value->text()));
 
     createPlot();
 }
 
 void ToneStackCalculator::on_r3Value_editingFinished()
 {
-    resistors[2]->setTextValue(toString(ui->r3Value->text()));
+    uiMap.resistors[2]->setTextValue(toString(ui->r3Value->text()));
 
     createPlot();
 }
 
 void ToneStackCalculator::on_r4Value_editingFinished()
 {
-    resistors[3]->setTextValue(toString(ui->r4Value->text()));
+    uiMap.resistors[3]->setTextValue(toString(ui->r4Value->text()));
 
     createPlot();
 }
 
 void ToneStackCalculator::on_r5Value_editingFinished()
 {
-    resistors[4]->setTextValue(toString(ui->r5Value->text()));
+    uiMap.resistors[4]->setTextValue(toString(ui->r5Value->text()));
 
     createPlot();
 }
 
 void ToneStackCalculator::on_c1Value_editingFinished()
 {
-    capacitors[0]->setTextValue(toString(ui->c1Value->text()));
+    uiMap.capacitors[0]->setTextValue(toString(ui->c1Value->text()));
 
     createPlot();
 }
 
 void ToneStackCalculator::on_c2Value_editingFinished()
 {
-    capacitors[1]->setTextValue(toString(ui->c2Value->text()));
+    uiMap.capacitors[1]->setTextValue(toString(ui->c2Value->text()));
 
     createPlot();
 }
 
 void ToneStackCalculator::on_c3Value_editingFinished()
 {
-    capacitors[2]->setTextValue(toString(ui->c3Value->text()));
+    uiMap.capacitors[2]->setTextValue(toString(ui->c3Value->text()));
 
     createPlot();
 }
 
 void ToneStackCalculator::on_c4Value_editingFinished()
 {
-    capacitors[3]->setTextValue(toString(ui->c4Value->text()));
+    uiMap.capacitors[3]->setTextValue(toString(ui->c4Value->text()));
 
     createPlot();
 }
 
 void ToneStackCalculator::on_c5Value_editingFinished()
 {
-    capacitors[4]->setTextValue(toString(ui->c5Value->text()));
+    uiMap.capacitors[4]->setTextValue(toString(ui->c5Value->text()));
 
     createPlot();
 }
 
 void ToneStackCalculator::on_l1Value_editingFinished()
 {
-    inductors[0]->setTextValue(toString(ui->l1Value->text()));
+    uiMap.inductors[0]->setTextValue(toString(ui->l1Value->text()));
 
     createPlot();
 }
 
 void ToneStackCalculator::on_l2Value_editingFinished()
 {
-    inductors[1]->setTextValue(toString(ui->l2Value->text()));
+    uiMap.inductors[1]->setTextValue(toString(ui->l2Value->text()));
 
     createPlot();
 }
 
 void ToneStackCalculator::on_l3Value_editingFinished()
 {
-    inductors[2]->setTextValue(toString(ui->l3Value->text()));
+    uiMap.inductors[2]->setTextValue(toString(ui->l3Value->text()));
 
     createPlot();
 }
 
 void ToneStackCalculator::on_l4Value_editingFinished()
 {
-    inductors[3]->setTextValue(toString(ui->l4Value->text()));
+    uiMap.inductors[3]->setTextValue(toString(ui->l4Value->text()));
 
     createPlot();
 }
 
 void ToneStackCalculator::on_l5Value_editingFinished()
 {
-    inductors[4]->setTextValue(toString(ui->l5Value->text()));
+    uiMap.inductors[4]->setTextValue(toString(ui->l5Value->text()));
 
     createPlot();
 }
 
 void ToneStackCalculator::on_rSValue_editingFinished()
 {
-    rS->setTextValue(toString(ui->rSValue->text()));
+    uiMap.rS->setTextValue(toString(ui->rSValue->text()));
 
     createPlot();
 }
 
 void ToneStackCalculator::on_rLValue_editingFinished()
 {
-    rL->setTextValue(toString(ui->rLValue->text()));
+    uiMap.rL->setTextValue(toString(ui->rLValue->text()));
 
     createPlot();
 }
@@ -547,3 +558,33 @@ void ToneStackCalculator::on_resetButton_clicked()
 
     createPlot();
 }
+
+void ToneStackCalculator::on_actionOpen_triggered()
+{
+    filename = QFileDialog::getOpenFileName(this, tr("Open a saved circuit"), QDir::homePath(), tr("Tone Stack files (*.tsc);;All Files (*)"));
+
+    if (!filename.isEmpty()) {
+        ui->actionSave->setEnabled(true);
+
+        circuit->openCircuit(filename);
+    }
+
+    createPlot();
+}
+
+void ToneStackCalculator::on_actionSave_triggered()
+{
+    if (!filename.isEmpty()) {
+        circuit->saveCircuit(filename);
+    }
+}
+
+void ToneStackCalculator::on_actionSave_As_triggered()
+{
+    filename = QFileDialog::getSaveFileName(this, tr("Save the current circuit values"), QDir::homePath(), tr("Tone Stack files (*.tsc);;All Files (*)"));
+
+    if (!filename.isEmpty()) {
+        circuit->saveCircuit(filename);
+    }
+}
+
