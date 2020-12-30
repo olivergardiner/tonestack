@@ -22,7 +22,6 @@ SOURCES += \
 HEADERS += \
     capacitor.h \
     circuit.h \
-    circuitdefinitions.h \
     circuitelement.h \
     inductor.h \
     namedialog.h \
