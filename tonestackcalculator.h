@@ -121,6 +121,7 @@ private:
     circuitUiMap uiMap;
 
     QJsonArray circuits;
+    int currentStack;
 
     Circuit *circuit;
 

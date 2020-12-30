@@ -37,10 +37,7 @@ public:
     int getPosition() const;
     void setPosition(int position);
 
-    void setPotentiometer(potType type, int value, int position, const char *label);
-    void setPotentiometer(pot *value, int position);
-
-    void setLabel(const char *label);
+    void setLabel(QString label);
     void setVisible(bool visible);
 
     void read(const QJsonObject &json);
@@ -50,7 +47,7 @@ private:
     QDial *dial;
     QComboBox *typeSelect;
 
-    const char *labelText;
+    QString labelText;
     potType type = POT_LIN;
     int position = POT_MAX / 2;
     int id;

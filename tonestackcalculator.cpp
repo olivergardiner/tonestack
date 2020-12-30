@@ -5,8 +5,6 @@
 #include <windows.h>
 #endif
 
-#include "circuitdefinitions.h"
-
 bool no_bg = true;
 int vecgetnumber = 0;
 double v2dat;
@@ -56,10 +54,8 @@ ToneStackCalculator::ToneStackCalculator(QWidget *parent)
     uiMap.rS = new Resistor(ui->rSLabel, ui->rSValue, 98);
     uiMap.rL = new Resistor(ui->rLLabel, ui->rLValue, 99);
 
-    uiMap.circuits = CIR_UNDEFINED;
     uiMap.circuitDisplay = ui->circuitDisplay;
     uiMap.stackSelection = ui->stackSelection;
-    uiMap.definitions = definitions;
 
     circuit = new Circuit(&uiMap);
 
@@ -134,8 +130,16 @@ void ToneStackCalculator::buildFrequencyResponseScene()
 
 void ToneStackCalculator::buildCircuitSelection()
 {
-    for (int i=0; i < CIR_UNDEFINED; i++) {
-        ui->stackSelection->addItem(definitions[i].circuitLabel);
+    for (int i=0; i < circuits.count(); i++) {
+        QJsonValue currentCircuit = circuits.at(i);
+        if (currentCircuit.isObject()) {
+            QJsonObject circuitObject = currentCircuit.toObject();
+            if (circuitObject.contains("circuitname") && circuitObject["circuitname"].isString()) {
+                ui->stackSelection->addItem(circuitObject["circuitname"].toString());
+            } else {
+                ui->stackSelection->addItem("<Undefined>");
+            }
+        }
     }
 
     ui->stackSelection->setCurrentIndex(0);
@@ -148,8 +152,13 @@ void ToneStackCalculator::setStack(int stack)
         spice("reset");
     }
 
-    circuit->setCurrentCircuit(stack);
+    //circuit->setCurrentCircuit(stack);
+    QJsonValue currentCircuit = circuits.at(stack);
+    if (currentCircuit.isObject()) {
+        circuit->read(currentCircuit.toObject());
+    }
 
+    currentStack = stack;
     filename = tr("");
     ui->actionSave->setEnabled(false);
 }
@@ -574,7 +583,7 @@ void ToneStackCalculator::on_rLValue_editingFinished()
 
 void ToneStackCalculator::on_resetButton_clicked()
 {
-    setStack(circuit->getCurrentCircuit());
+    setStack(currentStack);
 
     createPlot();
 }
@@ -586,7 +595,42 @@ void ToneStackCalculator::on_actionOpen_triggered()
     if (!filename.isEmpty()) {
         ui->actionSave->setEnabled(true);
 
-        circuit->openCircuit(filename);
+        QFile loadFile(filename);
+
+        if (!loadFile.open(QIODevice::ReadOnly)) {
+            qWarning("Couldn't open load file.");
+        } else {
+            QByteArray saveData = loadFile.readAll();
+
+            QJsonDocument loadDoc(QJsonDocument::fromJson(saveData));
+
+            int currentCount = circuits.count();
+
+            if (loadDoc.isObject()) {
+                QJsonObject config = loadDoc.object();
+
+                if (config.contains("circuits") && config["circuits"].isArray()) {
+                    QJsonArray circuitArray = config["circuits"].toArray();
+                    for (int i=0; i < circuitArray.count(); i++) {
+                        QJsonValue currentCircuit = circuitArray.at(i);
+                        if (currentCircuit.isObject()) {
+                            QJsonObject circuitObject = currentCircuit.toObject();
+                            circuits.append(circuitObject);
+                            if (circuitObject.contains("circuitname") && circuitObject["circuitname"].isString()) {
+                                ui->stackSelection->addItem(circuitObject["circuitname"].toString());
+                            } else {
+                                ui->stackSelection->addItem("<Undefined>");
+                            }
+                        }
+                    }
+
+                    if (circuitArray.count() > 0) {
+                        ui->stackSelection->setCurrentIndex(currentCount);
+                        setStack(currentCount);
+                    }
+                }
+            }
+        }
     }
 
     createPlot();
@@ -595,7 +639,15 @@ void ToneStackCalculator::on_actionOpen_triggered()
 void ToneStackCalculator::on_actionSave_triggered()
 {
     if (!filename.isEmpty()) {
-        circuit->saveCircuit(filename);
+        QFile saveFile(filename);
+
+        if (!saveFile.open(QIODevice::WriteOnly)) {
+            qWarning("Couldn't open save file.");
+        } else {
+            QJsonObject circuitObject;
+            circuit->write(circuitObject);
+            saveFile.write(QJsonDocument(circuitObject).toJson());
+        }
     }
 }
 

@@ -15,10 +15,8 @@
                     "value": 47000
                 }
             ],
-            "circuit": "Fender",
             "circuitname": "Fender",
             "command": "source ../circuits/fender.cir",
-            "id": 0,
             "image": "../circuits/fender.png",
             "inductors": [
             ],
@@ -70,10 +68,8 @@
                     "value": 22000
                 }
             ],
-            "circuit": "Marshall",
             "circuitname": "Marshall",
             "command": "source ../circuits/marshall.cir",
-            "id": 1,
             "image": "../circuits/marshall.png",
             "inductors": [
             ],
@@ -125,10 +121,8 @@
                     "value": 22000
                 }
             ],
-            "circuit": "Vox",
             "circuitname": "Vox",
             "command": "source ../circuits/vox.cir",
-            "id": 2,
             "image": "../circuits/vox.png",
             "inductors": [
             ],
@@ -182,10 +176,8 @@
                     "value": 3300
                 }
             ],
-            "circuit": "James",
             "circuitname": "James",
             "command": "source ../circuits/james.cir",
-            "id": 3,
             "image": "../circuits/james.png",
             "inductors": [
             ],
@@ -239,10 +231,8 @@
                     "value": 1000
                 }
             ],
-            "circuit": "Baxandall",
             "circuitname": "Baxandall",
             "command": "source ../circuits/baxandall.cir",
-            "id": 4,
             "image": "../circuits/baxandall.png",
             "inductors": [
             ],
@@ -292,10 +282,8 @@
                     "value": 4700
                 }
             ],
-            "circuit": "Voigt",
             "circuitname": "Voigt",
             "command": "source ../circuits/voigt.cir",
-            "id": 5,
             "image": "../circuits/voigt.png",
             "inductors": [
             ],
@@ -353,10 +341,8 @@
                     "value": 4700
                 }
             ],
-            "circuit": "Bone Ray",
             "circuitname": "Bone Ray",
             "command": "source ../circuits/boneray.cir",
-            "id": 6,
             "image": "../circuits/boneray.png",
             "inductors": [
             ],
@@ -402,10 +388,8 @@
                     "value": 10000
                 }
             ],
-            "circuit": "Bandmaster",
             "circuitname": "Bandmaster",
             "command": "source ../circuits/bandmaster.cir",
-            "id": 7,
             "image": "../circuits/bandmaster.png",
             "inductors": [
             ],
@@ -459,10 +443,8 @@
                     "value": 47000
                 }
             ],
-            "circuit": "Tube Driver",
             "circuitname": "Tube Driver",
             "command": "source ../circuits/tubedriver.cir",
-            "id": 8,
             "image": "../circuits/tubedriver.png",
             "inductors": [
             ],
@@ -512,10 +494,8 @@
                     "value": 4700
                 }
             ],
-            "circuit": "Marhsall 18W",
             "circuitname": "Marshall 18W",
             "command": "source ../circuits/marshall18.cir",
-            "id": 9,
             "image": "../circuits/marshall18.png",
             "inductors": [
             ],
@@ -547,10 +527,8 @@
                     "value": 250
                 }
             ],
-            "circuit": "Moonlight",
             "circuitname": "Moonlight",
             "command": "source ../circuits/moonlight.cir",
-            "id": 10,
             "image": "../circuits/moonlight.png",
             "inductors": [
             ],

@@ -36,33 +36,7 @@ void Potentiometer::setPosition(int position)
     alterModel();
 }
 
-void Potentiometer::setPotentiometer(potType type, int value, int position, const char *labelText)
-{
-    this->type = type;
-    typeSelect->setCurrentIndex(type);
-
-    this->position = position;
-    dial->setValue(position);
-
-    this->labelText = labelText;
-    label->setText(labelText);
-
-    setValue(value);
-}
-
-void Potentiometer::setPotentiometer(pot *value, int position)
-{
-    setType(value->type);
-    setValue(value->value);
-    labelText = value->label;
-    label->setText(labelText);
-
-    setPosition(position);
-
-    alterModel();
-}
-
-void Potentiometer::setLabel(const char *labelText)
+void Potentiometer::setLabel(QString labelText)
 {
     this->labelText = labelText;
     label->setText(labelText);
@@ -82,6 +56,10 @@ void Potentiometer::read(const QJsonObject &json)
 
     if (json.contains("type") && json["type"].isDouble()) {
         type = (potType) json["type"].toInt();
+    }
+
+    if (json.contains("function") && json["function"].isString()) {
+        setLabel(json["function"].toString());
     }
 
     typeSelect->setCurrentIndex(type);

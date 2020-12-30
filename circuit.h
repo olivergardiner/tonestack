@@ -6,28 +6,9 @@
 #include "capacitor.h"
 #include "inductor.h"
 
-typedef struct circuitDefinition {
-    int id;
-    const char circuitLabel[64];
-    const char circuitImage[64];
-    const char circuitCommand[64];
-    int rS;
-    int rL;
-    int pots;
-    pot potValues[4];
-    int resistors;
-    int rValues[5];
-    int capacitors;
-    int cValues[5];
-    int inductors;
-    int lValues[5];
-} circuit;
-
 typedef struct circuitUiMap {
-    int circuits;
     QLabel *circuitDisplay;
     QComboBox *stackSelection;
-    circuitDefinition *definitions;
     Potentiometer *pot1;
     Potentiometer *pot2;
     Potentiometer *pot3;
@@ -44,9 +25,6 @@ class Circuit
 public:
     Circuit(circuitUiMap *uiMap);
 
-    int getCurrentCircuit() const;
-    void setCurrentCircuit(int value);
-
     void read(const QJsonObject &json);
     void write(QJsonObject &json) const;
     void saveCircuit(QString filename);
@@ -59,11 +37,15 @@ protected:
     circuitUiMap *uiMap;
 
 private:
-    int currentCircuit;
     QString circuitName;
-
-    int findCircuit(int id);
-    void configureUi();
+    QString command;
+    QString image;
+    int resistors;
+    int capacitors;
+    int inductors;
+    bool pot1;
+    bool pot2;
+    bool pot3;
 };
 
 #endif // CIRCUIT_H
