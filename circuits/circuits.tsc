@@ -1,0 +1,587 @@
+{
+    "circuits": [
+        {
+            "capacitors": [
+                {
+                    "id": 1,
+                    "value": 270
+                },
+                {
+                    "id": 2,
+                    "value": 100000
+                },
+                {
+                    "id": 3,
+                    "value": 47000
+                }
+            ],
+            "circuit": "Fender",
+            "circuitname": "Fender",
+            "command": "source ../circuits/fender.cir",
+            "id": 0,
+            "image": "../circuits/fender.png",
+            "inductors": [
+            ],
+            "pot1": {
+                "function": "Bass",
+                "id": 1,
+                "type": 2,
+                "value": 250000
+            },
+            "pot2": {
+                "function": "Mid",
+                "id": 2,
+                "type": 0,
+                "value": 10000
+            },
+            "pot3": {
+                "function": "Treble",
+                "id": 3,
+                "type": 2,
+                "value": 250000
+            },
+            "rL": {
+                "id": 99,
+                "value": 500000
+            },
+            "rS": {
+                "id": 98,
+                "value": 38000
+            },
+            "resistors": [
+                {
+                    "id": 1,
+                    "value": 100000
+                }
+            ]
+        },
+		        {
+            "capacitors": [
+                {
+                    "id": 1,
+                    "value": 470
+                },
+                {
+                    "id": 2,
+                    "value": 22000
+                },
+                {
+                    "id": 3,
+                    "value": 22000
+                }
+            ],
+            "circuit": "Marshall",
+            "circuitname": "Marshall",
+            "command": "source ../circuits/marshall.cir",
+            "id": 1,
+            "image": "../circuits/marshall.png",
+            "inductors": [
+            ],
+            "pot1": {
+                "function": "Bass",
+                "id": 1,
+                "type": 1,
+                "value": 1000000
+            },
+            "pot2": {
+                "function": "Mid",
+                "id": 2,
+                "type": 0,
+                "value": 25000
+            },
+            "pot3": {
+                "function": "Treble",
+                "id": 3,
+                "type": 0,
+                "value": 220000
+            },
+            "rL": {
+                "id": 99,
+                "value": 1000000
+            },
+            "rS": {
+                "id": 98,
+                "value": 1300
+            },
+            "resistors": [
+                {
+                    "id": 1,
+                    "value": 33000
+                }
+            ]
+        },
+        {
+            "capacitors": [
+                {
+                    "id": 1,
+                    "value": 47
+                },
+                {
+                    "id": 2,
+                    "value": 22000
+                },
+                {
+                    "id": 3,
+                    "value": 22000
+                }
+            ],
+            "circuit": "Vox",
+            "circuitname": "Vox",
+            "command": "source ../circuits/vox.cir",
+            "id": 2,
+            "image": "../circuits/vox.png",
+            "inductors": [
+            ],
+            "pot1": {
+                "function": "Bass",
+                "id": 1,
+                "type": 2,
+                "value": 1000000
+            },
+            "pot3": {
+                "function": "Treble",
+                "id": 3,
+                "type": 2,
+                "value": 1000000
+            },
+            "rL": {
+                "id": 99,
+                "value": 600000
+            },
+            "rS": {
+                "id": 98,
+                "value": 56000
+            },
+            "resistors": [
+                {
+                    "id": 1,
+                    "value": 100000
+                },
+                {
+                    "id": 2,
+                    "value": 10000
+                }
+            ]
+        },
+        {
+            "capacitors": [
+                {
+                    "id": 1,
+                    "value": 470
+                },
+                {
+                    "id": 2,
+                    "value": 4700
+                },
+                {
+                    "id": 3,
+                    "value": 330
+                },
+                {
+                    "id": 4,
+                    "value": 3300
+                }
+            ],
+            "circuit": "James",
+            "circuitname": "James",
+            "command": "source ../circuits/james.cir",
+            "id": 3,
+            "image": "../circuits/james.png",
+            "inductors": [
+            ],
+            "pot1": {
+                "function": "Bass",
+                "id": 1,
+                "type": 1,
+                "value": 1000000
+            },
+            "pot3": {
+                "function": "Treble",
+                "id": 3,
+                "type": 1,
+                "value": 470000
+            },
+            "rL": {
+                "id": 99,
+                "value": 1000000
+            },
+            "rS": {
+                "id": 98,
+                "value": 38000
+            },
+            "resistors": [
+                {
+                    "id": 1,
+                    "value": 100000
+                },
+                {
+                    "id": 2,
+                    "value": 10000
+                },
+                {
+                    "id": 3,
+                    "value": 180000
+                }
+            ]
+        },
+        {
+            "capacitors": [
+                {
+                    "id": 1,
+                    "value": 10000
+                },
+                {
+                    "id": 2,
+                    "value": 10000
+                },
+                {
+                    "id": 3,
+                    "value": 1000
+                }
+            ],
+            "circuit": "Baxandall",
+            "circuitname": "Baxandall",
+            "command": "source ../circuits/baxandall.cir",
+            "id": 4,
+            "image": "../circuits/baxandall.png",
+            "inductors": [
+            ],
+            "pot1": {
+                "function": "Bass",
+                "id": 1,
+                "type": 0,
+                "value": 1000000
+            },
+            "pot3": {
+                "function": "Treble",
+                "id": 3,
+                "type": 0,
+                "value": 1000000
+            },
+            "rL": {
+                "id": 99,
+                "value": 1000000
+            },
+            "rS": {
+                "id": 98,
+                "value": 38000
+            },
+            "resistors": [
+                {
+                    "id": 1,
+                    "value": 100000
+                },
+                {
+                    "id": 2,
+                    "value": 100000
+                },
+                {
+                    "id": 3,
+                    "value": 100000
+                }
+            ]
+        },
+        {
+            "capacitors": [
+                {
+                    "id": 1,
+                    "value": 1000
+                },
+                {
+                    "id": 2,
+                    "value": 4700
+                }
+            ],
+            "circuit": "Voigt",
+            "circuitname": "Voigt",
+            "command": "source ../circuits/voigt.cir",
+            "id": 5,
+            "image": "../circuits/voigt.png",
+            "inductors": [
+            ],
+            "pot1": {
+                "function": "Bass",
+                "id": 1,
+                "type": 1,
+                "value": 1000000
+            },
+            "pot3": {
+                "function": "Treble",
+                "id": 3,
+                "type": 1,
+                "value": 220000
+            },
+            "rL": {
+                "id": 99,
+                "value": 1000000
+            },
+            "rS": {
+                "id": 98,
+                "value": 38000
+            },
+            "resistors": [
+                {
+                    "id": 1,
+                    "value": 470000
+                },
+                {
+                    "id": 2,
+                    "value": 1000000
+                },
+                {
+                    "id": 3,
+                    "value": 220000
+                }
+            ]
+        },
+        {
+            "capacitors": [
+                {
+                    "id": 1,
+                    "value": 220
+                },
+                {
+                    "id": 2,
+                    "value": 1000
+                },
+                {
+                    "id": 3,
+                    "value": 4700
+                },
+                {
+                    "id": 4,
+                    "value": 4700
+                }
+            ],
+            "circuit": "Bone Ray",
+            "circuitname": "Bone Ray",
+            "command": "source ../circuits/boneray.cir",
+            "id": 6,
+            "image": "../circuits/boneray.png",
+            "inductors": [
+            ],
+            "pot1": {
+                "function": "Tilt",
+                "id": 1,
+                "type": 0,
+                "value": 1000000
+            },
+            "pot3": {
+                "function": "Mid",
+                "id": 3,
+                "type": 0,
+                "value": 1000000
+            },
+            "rL": {
+                "id": 99,
+                "value": 1000000
+            },
+            "rS": {
+                "id": 98,
+                "value": 38000
+            },
+            "resistors": [
+                {
+                    "id": 1,
+                    "value": 470000
+                },
+                {
+                    "id": 2,
+                    "value": 470000
+                }
+            ]
+        },
+        {
+            "capacitors": [
+                {
+                    "id": 1,
+                    "value": 470
+                },
+                {
+                    "id": 2,
+                    "value": 10000
+                }
+            ],
+            "circuit": "Bandmaster",
+            "circuitname": "Bandmaster",
+            "command": "source ../circuits/bandmaster.cir",
+            "id": 7,
+            "image": "../circuits/bandmaster.png",
+            "inductors": [
+            ],
+            "pot1": {
+                "function": "Bass",
+                "id": 1,
+                "type": 2,
+                "value": 470000
+            },
+            "pot3": {
+                "function": "Treble",
+                "id": 3,
+                "type": 0,
+                "value": 470000
+            },
+            "rL": {
+                "id": 99,
+                "value": 1000000
+            },
+            "rS": {
+                "id": 98,
+                "value": 38000
+            },
+            "resistors": [
+                {
+                    "id": 1,
+                    "value": 220000
+                },
+                {
+                    "id": 2,
+                    "value": 22000
+                }
+            ]
+        },
+        {
+            "capacitors": [
+                {
+                    "id": 1,
+                    "value": 330
+                },
+                {
+                    "id": 2,
+                    "value": 100000
+                },
+                {
+                    "id": 3,
+                    "value": 47000
+                },
+                {
+                    "id": 4,
+                    "value": 47000
+                }
+            ],
+            "circuit": "Tube Driver",
+            "circuitname": "Tube Driver",
+            "command": "source ../circuits/tubedriver.cir",
+            "id": 8,
+            "image": "../circuits/tubedriver.png",
+            "inductors": [
+            ],
+            "pot1": {
+                "function": "Bass",
+                "id": 1,
+                "type": 1,
+                "value": 100000
+            },
+            "pot3": {
+                "function": "Treble",
+                "id": 3,
+                "type": 1,
+                "value": 500000
+            },
+            "rL": {
+                "id": 99,
+                "value": 100000
+            },
+            "rS": {
+                "id": 98,
+                "value": 38000
+            },
+            "resistors": [
+                {
+                    "id": 1,
+                    "value": 22000
+                },
+                {
+                    "id": 2,
+                    "value": 22000
+                },
+                {
+                    "id": 3,
+                    "value": 220000
+                }
+            ]
+        },
+        {
+            "capacitors": [
+                {
+                    "id": 1,
+                    "value": 10000
+                },
+                {
+                    "id": 2,
+                    "value": 4700
+                }
+            ],
+            "circuit": "Marhsall 18W",
+            "circuitname": "Marshall 18W",
+            "command": "source ../circuits/marshall18.cir",
+            "id": 9,
+            "image": "../circuits/marshall18.png",
+            "inductors": [
+            ],
+            "pot2": {
+                "function": "Tone",
+                "id": 2,
+                "type": 0,
+                "value": 500000
+            },
+            "rL": {
+                "id": 99,
+                "value": 1000000
+            },
+            "rS": {
+                "id": 98,
+                "value": 1300
+            },
+            "resistors": [
+                {
+                    "id": 1,
+                    "value": 100000
+                }
+            ]
+        },
+        {
+            "capacitors": [
+                {
+                    "id": 1,
+                    "value": 250
+                }
+            ],
+            "circuit": "Moonlight",
+            "circuitname": "Moonlight",
+            "command": "source ../circuits/moonlight.cir",
+            "id": 10,
+            "image": "../circuits/moonlight.png",
+            "inductors": [
+            ],
+            "pot2": {
+                "function": "Tone",
+                "id": 2,
+                "type": 0,
+                "value": 500000
+            },
+            "rL": {
+                "id": 99,
+                "value": 1000000
+            },
+            "rS": {
+                "id": 98,
+                "value": 38000
+            },
+            "resistors": [
+                {
+                    "id": 1,
+                    "value": 220000
+                },
+                {
+                    "id": 2,
+                    "value": 470000
+                },
+                {
+                    "id": 3,
+                    "value": 270000
+                }
+            ]
+        }
+    ]
+}

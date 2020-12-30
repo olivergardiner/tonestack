@@ -14,6 +14,7 @@ SOURCES += \
     circuitelement.cpp \
     inductor.cpp \
     main.cpp \
+    namedialog.cpp \
     potentiometer.cpp \
     resistor.cpp \
     tonestackcalculator.cpp
@@ -24,12 +25,14 @@ HEADERS += \
     circuitdefinitions.h \
     circuitelement.h \
     inductor.h \
+    namedialog.h \
     ngspice/sharedspice.h \
     potentiometer.h \
     resistor.h \
     tonestackcalculator.h
 
 FORMS += \
+    namedialog.ui \
     tonestackcalculator.ui
 
 # Default rules for deployment.

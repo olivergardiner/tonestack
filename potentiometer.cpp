@@ -97,6 +97,7 @@ void Potentiometer::write(QJsonObject &json) const
     Resistor::write(json);
 
     json["type"] = type;
+    json["function"] = labelText;
 }
 
 void Potentiometer::alterModel()

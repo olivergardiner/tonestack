@@ -22,7 +22,11 @@ ToneStackCalculator::ToneStackCalculator(QWidget *parent)
 {
     ngSpice_Init(ng_getchar, ng_getstat, ng_exit, ng_data, ng_initdata, ng_thread_runs, NULL);
 
+    readConfig();
+
     filename = tr("");
+
+    plotColour = QColor(191, 40, 40, 255);
 
     ui->setupUi(this);
 
@@ -193,7 +197,7 @@ void ToneStackCalculator::createPlot()
     QList<QGraphicsItem *> segments;
 
     QPen plotPen;
-    plotPen.setColor(QColor(191, 40, 40, 255));
+    plotPen.setColor(plotColour);
 
     qreal interval = decade / 10;
     qreal y = log10(magnitude(myvec->v_compdata[0]) + 1e-9) * -200;
@@ -224,9 +228,25 @@ char *ToneStackCalculator::toString(QString source)
     return _strdup(text);
 }
 
-void ToneStackCalculator::saveCircuit()
+void ToneStackCalculator::readConfig()
 {
+    QFile configFile("../circuits/circuits.tsc");
 
+    if (!configFile.open(QIODevice::ReadOnly)) {
+        qWarning("Couldn't open config file.");
+    } else {
+        QByteArray configData = configFile.readAll();
+
+        QJsonDocument configDoc(QJsonDocument::fromJson(configData));
+
+        if (configDoc.isObject()) {
+            QJsonObject config = configDoc.object();
+
+            if (config.contains("circuits") && config["circuits"].isArray()) {
+                circuits = config["circuits"].toArray();
+            }
+        }
+    }
 }
 
 /* Callback function called from bg thread in ngspice to transfer
@@ -581,10 +601,48 @@ void ToneStackCalculator::on_actionSave_triggered()
 
 void ToneStackCalculator::on_actionSave_As_triggered()
 {
-    filename = QFileDialog::getSaveFileName(this, tr("Save the current circuit values"), QDir::homePath(), tr("Tone Stack files (*.tsc);;All Files (*)"));
+    NameDialog dialog;
 
-    if (!filename.isEmpty()) {
-        circuit->saveCircuit(filename);
+    if (dialog.exec() == 1) {
+        filename = QFileDialog::getSaveFileName(this, tr("Save the current circuit values"), QDir::homePath(), tr("Tone Stack files (*.tsc);;All Files (*)"));
+
+        if (!filename.isEmpty()) {
+            circuit->setCircuitName(dialog.getName());
+            circuit->saveCircuit(filename);
+        }
     }
 }
 
+
+void ToneStackCalculator::on_pushButton_clicked()
+{
+    // Snapshot
+    if (plot && savedPlots <= 256) {
+        savedPlot[savedPlots++] = plot;
+        plot = nullptr;
+    }
+}
+
+void ToneStackCalculator::on_pushButton_2_clicked()
+{
+    // Colour
+    QColor newColour = QColorDialog::getColor(plotColour, this, tr("Select plot colour..."));
+
+    if (newColour.isValid()) {
+        plotColour = newColour;
+
+        createPlot();
+    }
+}
+
+void ToneStackCalculator::on_pushButton_3_clicked()
+{
+    // Clear
+    for (int i = 0; i < savedPlots; i++) {
+        scene.removeItem(savedPlot[i]);
+    }
+
+    savedPlots = 0;
+
+    createPlot();
+}

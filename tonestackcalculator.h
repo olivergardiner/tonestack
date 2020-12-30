@@ -5,6 +5,9 @@
 #include <QGraphicsScene>
 #include <QGraphicsItemGroup>
 #include <QFileDialog>
+#include <QColorDialog>
+#include <QJsonDocument>
+#include <QJsonArray>
 
 #include "ngspice/sharedspice.h"
 
@@ -13,6 +16,7 @@
 #include "capacitor.h"
 #include "inductor.h"
 #include "circuit.h"
+#include "namedialog.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class ToneStackCalculator; }
@@ -93,19 +97,30 @@ private slots:
 
     void on_actionSave_As_triggered();
 
+    void on_pushButton_clicked();
+
+    void on_pushButton_2_clicked();
+
+    void on_pushButton_3_clicked();
+
 private:
     Ui::ToneStackCalculator *ui;
 
     QGraphicsScene scene;
     QGraphicsScene circuitScene;
 
+    QColor plotColour;
     QGraphicsItemGroup *plot = nullptr;
+    QGraphicsItemGroup *savedPlot[256];
+    int savedPlots = 0;
 
     QImage *circuitImage = nullptr;
 
     qreal decade;
 
     circuitUiMap uiMap;
+
+    QJsonArray circuits;
 
     Circuit *circuit;
 
@@ -123,7 +138,7 @@ private:
 
     char *toString(QString source);
 
-    void saveCircuit();
+    void readConfig();
 };
 
 int ng_getchar(char* outputreturn, int ident, void* userdata);

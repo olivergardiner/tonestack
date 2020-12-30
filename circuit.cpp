@@ -123,8 +123,6 @@ void Circuit::read(const QJsonObject &json)
     if (json.contains("id") && json["id"].isDouble()) {
         currentCircuit = findCircuit(json["id"].toDouble());
 
-        configureUi();
-
         spice(uiMap->definitions[currentCircuit].circuitCommand);
     }
 
@@ -138,23 +136,37 @@ void Circuit::read(const QJsonObject &json)
 
     if (json.contains("pot1") && json["pot1"].isObject()) {
         uiMap->pot1->read(json["pot1"].toObject());
+        uiMap->pot1->setVisible(true);
+    } else {
+        uiMap->pot1->setVisible(false);
     }
 
     if (json.contains("pot2") && json["pot2"].isObject()) {
         uiMap->pot2->read(json["pot2"].toObject());
+        uiMap->pot2->setVisible(true);
+    } else {
+        uiMap->pot2->setVisible(false);
     }
 
     if (json.contains("pot3") && json["pot3"].isObject()) {
         uiMap->pot3->read(json["pot3"].toObject());
+        uiMap->pot3->setVisible(true);
+    } else {
+        uiMap->pot3->setVisible(false);
     }
 
     if (json.contains("resistors") && json["resistors"].isArray()) {
         QJsonArray resistorArray = json["resistors"].toArray();
         int length = resistorArray.count();
-        for (int r=0; r < length; r++) {
-            QJsonValue resistorValue = resistorArray.at(r);
-            if (resistorValue.isObject()) {
-                uiMap->resistors[r]->read(resistorValue.toObject());
+        for (int r=0; r < 5; r++) {
+            if (r < length) {
+                QJsonValue resistorValue = resistorArray.at(r);
+                if (resistorValue.isObject()) {
+                    uiMap->resistors[r]->read(resistorValue.toObject());
+                    uiMap->resistors[r]->setVisible(true);
+                } else {
+                    uiMap->resistors[r]->setVisible(false);
+                }
             }
         }
     }
@@ -166,6 +178,9 @@ void Circuit::read(const QJsonObject &json)
             QJsonValue capacitorValue = capacitorArray.at(c);
             if (capacitorValue.isObject()) {
                 uiMap->capacitors[c]->read(capacitorValue.toObject());
+                uiMap->capacitors[c]->setVisible(true);
+            } else {
+                uiMap->capacitors[c]->setVisible(false);
             }
         }
     }
@@ -177,6 +192,9 @@ void Circuit::read(const QJsonObject &json)
             QJsonValue inductorValue = inductorArray.at(l);
             if (inductorValue.isObject()) {
                 uiMap->inductors[l]->read(inductorValue.toObject());
+                uiMap->inductors[l]->setVisible(true);
+            } else {
+                uiMap->inductors[l]->setVisible(false);
             }
         }
     }
@@ -186,16 +204,23 @@ void Circuit::write(QJsonObject &json) const
 {
     circuitDefinition *currentDefinition = &uiMap->definitions[currentCircuit];
 
-    json["id"] = currentDefinition->id;
-    json["circuit"] = currentDefinition->circuitLabel;
+    QJsonArray circuits;
+
+    QJsonObject currentCircuit;
+
+    currentCircuit["id"] = currentDefinition->id;
+    currentCircuit["circuitname"] = circuitName;
+    currentCircuit["image"] = currentDefinition->circuitImage;
+    currentCircuit["command"] = currentDefinition->circuitCommand;
+    currentCircuit["circuit"] = currentDefinition->circuitLabel;
 
     QJsonObject rSObject;
     uiMap->rS->write(rSObject);
-    json["rS"] = rSObject;
+    currentCircuit["rS"] = rSObject;
 
     QJsonObject rLObject;
     uiMap->rL->write(rLObject);
-    json["rL"] = rLObject;
+    currentCircuit["rL"] = rLObject;
 
     QJsonArray resistorObjects;
     for (int r = 0; r < currentDefinition->resistors; r++) {
@@ -203,7 +228,7 @@ void Circuit::write(QJsonObject &json) const
         uiMap->resistors[r]->write(resistorObject);
         resistorObjects.append(resistorObject);
     }
-    json["resistors"] = resistorObjects;
+    currentCircuit["resistors"] = resistorObjects;
 
     QJsonArray capacitorObjects;
     for (int c = 0; c < currentDefinition->capacitors; c++) {
@@ -211,7 +236,7 @@ void Circuit::write(QJsonObject &json) const
         uiMap->capacitors[c]->write(capacitorObject);
         capacitorObjects.append(capacitorObject);
     }
-    json["capacitors"] = capacitorObjects;
+    currentCircuit["capacitors"] = capacitorObjects;
 
     QJsonArray inductorObjects;
     for (int l = 0; l < currentDefinition->inductors; l++) {
@@ -219,7 +244,7 @@ void Circuit::write(QJsonObject &json) const
         uiMap->inductors[l]->write(inductorObject);
         inductorObjects.append(inductorObject);
     }
-    json["inductors"] = inductorObjects;
+    currentCircuit["inductors"] = inductorObjects;
 
     QJsonObject pot1Object;
     QJsonObject pot2Object;
@@ -227,24 +252,28 @@ void Circuit::write(QJsonObject &json) const
     switch (currentDefinition->pots) {
     case 1:
         uiMap->pot2->write(pot2Object);
-        json["pot2"] = pot2Object;
+        currentCircuit["pot2"] = pot2Object;
         break;
     case 2:
         uiMap->pot1->write(pot1Object);
-        json["pot1"] = pot1Object;
+        currentCircuit["pot1"] = pot1Object;
         uiMap->pot3->write(pot3Object);
-        json["pot3"] = pot3Object;
+        currentCircuit["pot3"] = pot3Object;
         break;
     case 3:
     default:
         uiMap->pot1->write(pot1Object);
-        json["pot1"] = pot1Object;
+        currentCircuit["pot1"] = pot1Object;
         uiMap->pot2->write(pot2Object);
-        json["pot2"] = pot2Object;
+        currentCircuit["pot2"] = pot2Object;
         uiMap->pot3->write(pot3Object);
-        json["pot3"] = pot3Object;
+        currentCircuit["pot3"] = pot3Object;
         break;
     }
+
+    circuits.append(currentCircuit);
+
+    json["circuits"] = circuits;
 }
 
 void Circuit::saveCircuit(QString filename)
@@ -271,8 +300,29 @@ void Circuit::openCircuit(QString filename)
 
         QJsonDocument loadDoc(QJsonDocument::fromJson(saveData));
 
+        if (loadDoc.isObject()) {
+            QJsonObject config = loadDoc.object();
+
+            if (config.contains("circuits") && config["circuits"].isArray()) {
+                QJsonValue circuitObject = config["circuits"].toArray().at(0);
+                if (circuitObject.isObject()) {
+                    read(circuitObject.toObject());
+                }
+            }
+        }
+
         read(loadDoc.object());
     }
+}
+
+QString Circuit::getCircuitName() const
+{
+    return circuitName;
+}
+
+void Circuit::setCircuitName(const QString &value)
+{
+    circuitName = value;
 }
 
 int Circuit::findCircuit(int id)

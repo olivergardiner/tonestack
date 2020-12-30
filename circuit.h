@@ -52,11 +52,15 @@ public:
     void saveCircuit(QString filename);
     void openCircuit(QString filename);
 
+    QString getCircuitName() const;
+    void setCircuitName(const QString &value);
+
 protected:
     circuitUiMap *uiMap;
 
 private:
     int currentCircuit;
+    QString circuitName;
 
     int findCircuit(int id);
     void configureUi();
