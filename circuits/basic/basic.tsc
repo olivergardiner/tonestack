@@ -1,0 +1,60 @@
+{
+    "circuits": [
+        {
+            "circuitname": "Simple RC High Pass",
+            "command": "source ../circuits/basic/simplerchi.cir",
+            "image": "../circuits/basic/simplerchi.png",
+            "rS": {
+                "id": 98,
+                "value": 1
+            },
+            "rL": {
+                "id": 99,
+                "value": 10000000
+            },
+            "resistors": [
+                {
+                    "id": 1,
+                    "value": 160000
+                }
+            ],
+            "capacitors": [
+                {
+                    "id": 1,
+                    "value": 1000
+                }
+            ],
+            "inductors": [
+            ]
+        },
+        {
+            "circuitname": "Variable RC High Pass",
+            "command": "source ../circuits/basic/rchivar.cir",
+            "image": "../circuits/basic/rchivar.png",
+            "rS": {
+                "id": 98,
+                "value": 1
+            },
+            "rL": {
+                "id": 99,
+                "value": 10000000
+            },
+            "pot2": {
+                "function": "Load",
+                "id": 2,
+                "type": 0,
+                "value": 160000
+            },
+            "resistors": [
+            ],
+            "capacitors": [
+                {
+                    "id": 1,
+                    "value": 100000
+                }
+            ],
+            "inductors": [
+            ]
+        }
+	]
+}

@@ -8,6 +8,8 @@
 #include <QColorDialog>
 #include <QJsonDocument>
 #include <QJsonArray>
+#include <QPrinter>
+#include <QPrintDialog>
 
 #include "ngspice/sharedspice.h"
 
@@ -103,6 +105,12 @@ private slots:
 
     void on_pushButton_3_clicked();
 
+    void on_actionPrint_triggered();
+
+    void on_actionTone_Stack_Mode_triggered();
+
+    void on_actionBasic_Electronics_Mode_triggered();
+
 private:
     Ui::ToneStackCalculator *ui;
 
@@ -139,7 +147,7 @@ private:
 
     char *toString(QString source);
 
-    void readConfig();
+    void readConfig(QString configFile);
 };
 
 int ng_getchar(char* outputreturn, int ident, void* userdata);

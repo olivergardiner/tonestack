@@ -55,7 +55,7 @@ void Circuit::read(const QJsonObject &json)
     } else {
         pot3 = false;
     }
-    uiMap->pot1->setVisible(pot3);
+    uiMap->pot3->setVisible(pot3);
 
     if (json.contains("resistors") && json["resistors"].isArray()) {
         QJsonArray resistorArray = json["resistors"].toArray();

@@ -51,7 +51,7 @@
        <item>
         <widget class="QLabel" name="label">
          <property name="text">
-          <string>Tone Stack</string>
+          <string>Circuit:</string>
          </property>
         </widget>
        </item>
@@ -101,10 +101,22 @@
      <item>
       <widget class="QLabel" name="circuitDisplay">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>469</width>
+         <height>360</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>360</height>
+        </size>
        </property>
        <property name="frameShape">
         <enum>QFrame::Panel</enum>
@@ -119,6 +131,19 @@
         <set>Qt::AlignCenter</set>
        </property>
       </widget>
+     </item>
+     <item>
+      <spacer name="verticalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
      </item>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_6">
@@ -1073,6 +1098,7 @@
     <addaction name="actionSave"/>
     <addaction name="actionSave_As"/>
     <addaction name="actionQuit"/>
+    <addaction name="actionPrint"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -1080,7 +1106,15 @@
     </property>
     <addaction name="actionAbout"/>
    </widget>
+   <widget class="QMenu" name="menuMode">
+    <property name="title">
+     <string>Mode</string>
+    </property>
+    <addaction name="actionTone_Stack_Mode"/>
+    <addaction name="actionBasic_Electronics_Mode"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuMode"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -1131,6 +1165,33 @@
    </property>
    <property name="menuRole">
     <enum>QAction::TextHeuristicRole</enum>
+   </property>
+  </action>
+  <action name="actionPrint">
+   <property name="text">
+    <string>Print</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
+   </property>
+  </action>
+  <action name="actionTone_Stack_Mode">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Tone Stack Mode</string>
+   </property>
+  </action>
+  <action name="actionBasic_Electronics_Mode">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Basic Electronics Mode</string>
    </property>
   </action>
  </widget>

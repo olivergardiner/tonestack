@@ -20,7 +20,7 @@ ToneStackCalculator::ToneStackCalculator(QWidget *parent)
 {
     ngSpice_Init(ng_getchar, ng_getstat, ng_exit, ng_data, ng_initdata, ng_thread_runs, NULL);
 
-    readConfig();
+    readConfig(tr("tonestacks.tsc"));
 
     filename = tr("");
 
@@ -130,6 +130,8 @@ void ToneStackCalculator::buildFrequencyResponseScene()
 
 void ToneStackCalculator::buildCircuitSelection()
 {
+    ui->stackSelection->clear();
+
     for (int i=0; i < circuits.count(); i++) {
         QJsonValue currentCircuit = circuits.at(i);
         if (currentCircuit.isObject()) {
@@ -208,7 +210,7 @@ void ToneStackCalculator::createPlot()
     QPen plotPen;
     plotPen.setColor(plotColour);
 
-    qreal interval = decade / 10;
+    qreal interval = decade / 40;
     qreal y = log10(magnitude(myvec->v_compdata[0]) + 1e-9) * -200;
 
     for (int i=1;i < veclength; i++) {
@@ -237,9 +239,9 @@ char *ToneStackCalculator::toString(QString source)
     return _strdup(text);
 }
 
-void ToneStackCalculator::readConfig()
+void ToneStackCalculator::readConfig(QString filename)
 {
-    QFile configFile("../circuits/circuits.tsc");
+    QFile configFile(tr("../circuits/").append(filename));
 
     if (!configFile.open(QIODevice::ReadOnly)) {
         qWarning("Couldn't open config file.");
@@ -697,4 +699,41 @@ void ToneStackCalculator::on_pushButton_3_clicked()
     savedPlots = 0;
 
     createPlot();
+}
+
+void ToneStackCalculator::on_actionPrint_triggered()
+{
+    QPrinter printer;
+
+    QPrintDialog dialog(&printer, this);
+    dialog.setWindowTitle(tr("Print Document"));
+
+    if (dialog.exec() != QDialog::Accepted) {
+        return;
+    }
+
+    QPainter painter;
+    painter.begin(&printer);
+    painter.setRenderHint(QPainter::Antialiasing);
+    scene.render(&painter);
+}
+
+void ToneStackCalculator::on_actionTone_Stack_Mode_triggered()
+{
+    readConfig(tr("tonestacks.tsc"));
+
+    buildCircuitSelection();
+
+    ui->actionTone_Stack_Mode->setChecked(true);
+    ui->actionBasic_Electronics_Mode->setChecked(false);
+}
+
+void ToneStackCalculator::on_actionBasic_Electronics_Mode_triggered()
+{
+    readConfig(tr("basic/basic.tsc"));
+
+    buildCircuitSelection();
+
+    ui->actionTone_Stack_Mode->setChecked(false);
+    ui->actionBasic_Electronics_Mode->setChecked(true);
 }
