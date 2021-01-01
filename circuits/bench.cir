@@ -1,0 +1,42 @@
+Bench circuit for tonestack
+
+* Insert you circuit in the area marked below - do not change anything else.
+* The input to your circuit is node 2 relative to node 0 which is ground
+* The output of your circuit must be node 3
+
+* Four potentiometers are nominally available for you to use in your circuit:
+* Pot 1 must consist of RP1LO and RP1HI
+* Pot 2 must consist of RP2LO and RP2HI
+* Pot 3 must consist of RP3LO and RP3HI
+* Pot 4 must consist of RP4LO and RP4HI - this is currently inactive
+
+* Nodes 0 to 9 are reserved
+
+VIN 0 1 DC 0 AC 1
+R98 1 2 13K
+
+******* PLACE YOUR CIRCUIT HERE *******
+
+R1 2 3 51K
+C1 11 3 22N
+C2 13 3 6.8N
+L1 10 11 6H
+L2 12 3 20H
+
+RP1LO 0 12 10K
+RP1HI 12 2 90K
+
+RP2LO 0 10 10K
+RP2HI 10 2 9K
+
+RP3LO 0 13 10K
+RP3HI 13 2 90K
+
+******* PLACE YOUR CIRCUIT HERE *******
+
+R99 3 0 5.1K
+
+.OPTIONS NOACCT
+.AC DEC 40 10 100K
+
+.END

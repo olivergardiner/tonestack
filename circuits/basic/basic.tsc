@@ -55,6 +55,149 @@
             ],
             "inductors": [
             ]
+        },
+		{
+            "circuitname": "Simple RC Low Pass",
+            "command": "source ../circuits/basic/simplerclo.cir",
+            "image": "../circuits/basic/simplerclo.png",
+            "rS": {
+                "id": 98,
+                "value": 1
+            },
+            "rL": {
+                "id": 99,
+                "value": 10000000
+            },
+            "resistors": [
+                {
+                    "id": 1,
+                    "value": 160000
+                }
+            ],
+            "capacitors": [
+                {
+                    "id": 1,
+                    "value": 1000
+                }
+            ],
+            "inductors": [
+            ]
+        },
+		{
+            "circuitname": "Simple RL High Pass",
+            "command": "source ../circuits/basic/simplerlhi.cir",
+            "image": "../circuits/basic/simplerlhi.png",
+            "rS": {
+                "id": 98,
+                "value": 1
+            },
+            "rL": {
+                "id": 99,
+                "value": 10000000
+            },
+            "resistors": [
+                {
+                    "id": 1,
+                    "value": 63000
+                }
+            ],
+            "capacitors": [
+            ],
+            "inductors": [
+                {
+                    "id": 1,
+                    "value": 10000000
+                }
+            ]
+        },
+		{
+            "circuitname": "Simple RL Low Pass",
+            "command": "source ../circuits/basic/simplerllo.cir",
+            "image": "../circuits/basic/simplerllo.png",
+            "rS": {
+                "id": 98,
+                "value": 1
+            },
+            "rL": {
+                "id": 99,
+                "value": 10000000
+            },
+            "resistors": [
+                {
+                    "id": 1,
+                    "value": 63000
+                }
+            ],
+            "capacitors": [
+            ],
+            "inductors": [
+                {
+                    "id": 1,
+                    "value": 10000000
+                }
+            ]
+        },
+		{
+            "circuitname": "Simple LC High Pass",
+            "command": "source ../circuits/basic/simplelchi.cir",
+            "image": "../circuits/basic/simplelchi.png",
+            "rS": {
+                "id": 98,
+                "value": 1
+            },
+            "rL": {
+                "id": 99,
+                "value": 1000000
+            },
+            "resistors": [
+                {
+                    "id": 1,
+                    "value": 9000000
+                }
+            ],
+            "capacitors": [
+                {
+                    "id": 1,
+                    "value": 10000
+                }
+             ],
+            "inductors": [
+                {
+                    "id": 1,
+                    "value": 2500000
+                }
+            ]
+        },
+		{
+            "circuitname": "Simple LC Low Pass",
+            "command": "source ../circuits/basic/simplelclo.cir",
+            "image": "../circuits/basic/simplelclo.png",
+            "rS": {
+                "id": 98,
+                "value": 1
+            },
+            "rL": {
+                "id": 99,
+                "value": 1000000
+            },
+            "resistors": [
+                {
+                    "id": 1,
+                    "value": 9000000
+                }
+            ],
+            "capacitors": [
+                {
+                    "id": 1,
+                    "value": 10000
+                }
+             ],
+            "inductors": [
+                {
+                    "id": 1,
+                    "value": 2500000
+                }
+            ]
         }
 	]
 }

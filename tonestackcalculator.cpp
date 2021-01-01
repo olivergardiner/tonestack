@@ -215,6 +215,10 @@ void ToneStackCalculator::createPlot()
 
     for (int i=1;i < veclength; i++) {
         qreal newy = log10(magnitude(myvec->v_compdata[i]) + 1e-9) * -200;
+        if (newy < 0) {
+            newy = 0;
+        }
+
         if (newy < 400) {
            segments.append(scene.addLine(interval * (i-1), y, interval * i, newy, plotPen));
         }

@@ -107,6 +107,63 @@
             ]
         },
         {
+            "circuitname": "Bench",
+            "command": "source ../circuits/bench.cir",
+            "image": "../circuits/bench.png",
+            "rS": {
+                "id": 98,
+                "value": 13000
+            },
+            "rL": {
+                "id": 99,
+                "value": 5100
+            },
+            "pot1": {
+                "function": "Bass",
+                "id": 1,
+                "type": 1,
+                "value": 100000
+            },
+            "pot2": {
+                "function": "Mid",
+                "id": 2,
+                "type": 1,
+                "value": 100000
+            },
+            "pot3": {
+                "function": "Treble",
+                "id": 3,
+                "type": 1,
+                "value": 100000
+            },
+            "resistors": [
+                {
+                    "id": 1,
+                    "value": 51000
+                }
+            ],
+            "capacitors": [
+                {
+                    "id": 1,
+                    "value": 22000
+                },
+                {
+                    "id": 2,
+                    "value": 6800
+                }
+            ],
+            "inductors": [
+                {
+                    "id": 1,
+                    "value": 6000000
+                },
+                {
+                    "id": 2,
+                    "value": 20000000
+                }
+            ]
+        },
+        {
             "capacitors": [
                 {
                     "id": 1,
