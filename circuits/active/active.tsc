@@ -1,0 +1,52 @@
+{
+    "circuits": [
+        {
+            "circuitname": "Pearl OD5 Band Filter",
+            "command": "source ../circuits/active/pearlod5.cir",
+            "image": "../circuits/active/pearlod5.png",
+            "rS": {
+                "id": 98,
+                "value": 1
+            },
+            "rL": {
+                "id": 99,
+                "value": 10000
+            },
+            "pot1": {
+                "function": "Boost/Cut",
+                "id": 1,
+                "type": 0,
+                "value": 10000
+            },
+            "pot3": {
+                "function": "Frequency",
+                "id": 3,
+                "type": 0,
+				"ganged": true,
+                "value": 100000
+            },
+            "resistors": [
+                {
+                    "id": 1,
+                    "value": 2200
+                },
+                {
+                    "id": 2,
+                    "value": 2200
+                }
+            ],
+            "capacitors": [
+                {
+                    "id": 1,
+                    "value": 4700
+                },
+                {
+                    "id": 2,
+                    "value": 68000
+                }
+            ],
+            "inductors": [
+            ]
+        }
+	]
+}

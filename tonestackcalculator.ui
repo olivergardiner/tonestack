@@ -1112,6 +1112,7 @@
     </property>
     <addaction name="actionTone_Stack_Mode"/>
     <addaction name="actionBasic_Electronics_Mode"/>
+    <addaction name="actionActive_Circuits_Mode"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuMode"/>
@@ -1192,6 +1193,14 @@
    </property>
    <property name="text">
     <string>Basic Electronics Mode</string>
+   </property>
+  </action>
+  <action name="actionActive_Circuits_Mode">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Active Circuits Mode</string>
    </property>
   </action>
  </widget>

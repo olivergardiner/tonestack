@@ -1,4 +1,4 @@
-Vox circuit for tonestack
+Pearl OD5 filter circuit for tonestack
 
 * Insert you circuit in the area marked below - do not change anything else.
 * The input to your circuit is node 2 relative to node 0 which is ground
@@ -8,32 +8,48 @@ Vox circuit for tonestack
 * Pot 1 must consist of RP1LO and RP1HI
 * Pot 2 must consist of RP2LO and RP2HI
 * Pot 3 must consist of RP3LO and RP3HI
-* Pot 4 must consist of RP4LO and RP4HI - this is currently inactive
+* Pot 4 must consist of RP4LO and RP4HI - this is cuurently inactive
 
 * Nodes 0 to 9 are reserved
 
 VIN 0 1 DC 0 AC 1
-R98 1 2 56K
+R98 1 2 47
+
+******* PLACE YOUR CIRCUIT HERE *******
+.INCLUDE OPAMP1.cir
+
+R1 12 13 2.2K
+R2 17 18 2.2K
+C1 12 18 4.7n
+C2 15 0 68N
+
+RP1LO 2 10 8K
+RP1HI 10 31 2K
+
+RP3LO 15 13 70K
+RP3HI 13 13 30K
+
+RP3LO2 15 15 70K
+RP3HI2 15 17 30K
+
+XOPAMP1 10 12 18 OPAMP1
+
+RD1 18 21 22K
+RD2 10 20 22K
+RD3 21 0 22K
+RD4 20 22 22K
+XOPAMP2 21 20 22 OPAMP1
+
+RS1 2 30 10K
+RS2 22 30 10K
+RS3 30 31 10K
+XOPAMP3 0 30 31 OPAMP1
+
+RPAD 31 3 90K
 
 ******* PLACE YOUR CIRCUIT HERE *******
 
-R1 2 10 100K
-R2 13 0 10K
-C1 2 11 47P
-C2 10 12 22N
-C3 10 13 22N
-
-* Bass 1M LogA
-RP1LO 13 12 500K
-RP1HI 0 13 500K
-
-* Treble 1M LogA
-RP3LO 12 3 500K
-RP3HI 3 11 500K
-
-******* PLACE YOUR CIRCUIT HERE *******
-
-R99 3 0 600K
+R99 3 0 10K
 
 .OPTIONS NOACCT
 .AC DEC 40 10 100K

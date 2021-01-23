@@ -111,6 +111,8 @@ private slots:
 
     void on_actionBasic_Electronics_Mode_triggered();
 
+    void on_actionActive_Circuits_Mode_triggered();
+
 private:
     Ui::ToneStackCalculator *ui;
 

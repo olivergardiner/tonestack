@@ -578,6 +578,51 @@
             ]
         },
         {
+            "circuitname": "Big Muff",
+            "command": "source ../circuits/bigmuff.cir",
+            "image": "../circuits/bigmuff.png",
+            "rS": {
+                "id": 98,
+                "value": 10000
+            },
+            "rL": {
+                "id": 99,
+                "value": 82000
+            },
+            "pot2": {
+                "function": "Tone",
+                "id": 2,
+                "type": 0,
+                "value": 100000
+            },
+            "resistors": [
+                {
+                    "id": 1,
+                    "value": 39000
+                },
+                {
+                    "id": 2,
+                    "value": 22000
+                }
+            ],
+            "capacitors": [
+                {
+                    "id": 1,
+                    "value": 3900
+                },
+                {
+                    "id": 2,
+                    "value": 10000
+                },
+                {
+                    "id": 3,
+                    "value": 100000
+                }
+            ],
+            "inductors": [
+            ]
+        },
+        {
             "capacitors": [
                 {
                     "id": 1,

@@ -730,6 +730,7 @@ void ToneStackCalculator::on_actionTone_Stack_Mode_triggered()
 
     ui->actionTone_Stack_Mode->setChecked(true);
     ui->actionBasic_Electronics_Mode->setChecked(false);
+    ui->actionActive_Circuits_Mode->setChecked(false);
 }
 
 void ToneStackCalculator::on_actionBasic_Electronics_Mode_triggered()
@@ -740,4 +741,16 @@ void ToneStackCalculator::on_actionBasic_Electronics_Mode_triggered()
 
     ui->actionTone_Stack_Mode->setChecked(false);
     ui->actionBasic_Electronics_Mode->setChecked(true);
+    ui->actionActive_Circuits_Mode->setChecked(false);
+}
+
+void ToneStackCalculator::on_actionActive_Circuits_Mode_triggered()
+{
+    readConfig(tr("active/active.tsc"));
+
+    buildCircuitSelection();
+
+    ui->actionTone_Stack_Mode->setChecked(false);
+    ui->actionBasic_Electronics_Mode->setChecked(false);
+    ui->actionActive_Circuits_Mode->setChecked(true);
 }

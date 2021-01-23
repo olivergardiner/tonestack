@@ -24,6 +24,7 @@ typedef struct pot {
     char label[32];
     int value;
     potType type;
+    bool ganged;
 } pot;
 
 class Potentiometer : public Resistor
@@ -43,6 +44,8 @@ public:
     void read(const QJsonObject &json);
     void write(QJsonObject &json) const;
 
+    bool isGanged() const;
+
 private:
     QDial *dial;
     QComboBox *typeSelect;
@@ -50,6 +53,7 @@ private:
     QString labelText;
     potType type = POT_LIN;
     int position = POT_MAX / 2;
+    bool ganged;
     int id;
 
     int getPotTypeIndex(potType type);
@@ -57,6 +61,8 @@ private:
     potType getPotType(int index);
 
     void alterModel();
+
+    void alterPot(int rlo, int rhi, bool gang);
 
     char *lowercase(const char *mixed);
 

@@ -35,7 +35,7 @@
 				v:shadowOffsetY="-8.50394"/>
 		<g id="group18-1" transform="translate(47.175,-147.975)" v:mID="18" v:groupContext="group">
 			<title>Sheet.18</title>
-			<g id="shape19-2" v:mID="19" v:groupContext="shape" transform="translate(7.2,0)">
+			<g id="shape19-2" v:mID="19" v:groupContext="shape" transform="translate(7.2,2.84217E-14)">
 				<title>Sheet.19</title>
 				<rect x="0" y="164.75" width="21.6" height="7.2" class="st1"/>
 			</g>
@@ -58,7 +58,7 @@
 		</g>
 		<g id="group27-16" transform="translate(-27.575,63.575) rotate(-90)" v:mID="27" v:groupContext="group">
 			<title>Sheet.27</title>
-			<g id="shape28-17" v:mID="28" v:groupContext="shape" transform="translate(7.2,0)">
+			<g id="shape28-17" v:mID="28" v:groupContext="shape" transform="translate(7.2,2.84217E-14)">
 				<title>Sheet.28</title>
 				<rect x="0" y="164.75" width="21.6" height="7.2" class="st1"/>
 			</g>
@@ -73,7 +73,7 @@
 		</g>
 		<g id="group35-25" transform="translate(-27.575,139.175) rotate(-90)" v:mID="35" v:groupContext="group">
 			<title>Sheet.35</title>
-			<g id="shape36-26" v:mID="36" v:groupContext="shape" transform="translate(7.2,0)">
+			<g id="shape36-26" v:mID="36" v:groupContext="shape" transform="translate(7.2,2.84217E-14)">
 				<title>Sheet.36</title>
 				<rect x="0" y="164.75" width="21.6" height="7.2" class="st1"/>
 			</g>
@@ -88,7 +88,7 @@
 		</g>
 		<g id="group39-34" transform="translate(-77.975,63.575) rotate(-90)" v:mID="39" v:groupContext="group">
 			<title>Sheet.39</title>
-			<g id="shape40-35" v:mID="40" v:groupContext="shape" transform="translate(7.2,0)">
+			<g id="shape40-35" v:mID="40" v:groupContext="shape" transform="translate(7.2,2.84217E-14)">
 				<title>Sheet.40</title>
 				<rect x="0" y="164.75" width="21.6" height="7.2" class="st1"/>
 			</g>
@@ -184,7 +184,7 @@
 		</g>
 		<g id="group71-94" transform="translate(22.825,113.975) rotate(-90)" v:mID="71" v:groupContext="group">
 			<title>Sheet.71</title>
-			<g id="shape72-95" v:mID="72" v:groupContext="shape" transform="translate(7.2,0)">
+			<g id="shape72-95" v:mID="72" v:groupContext="shape" transform="translate(7.2,2.84217E-14)">
 				<title>Sheet.72</title>
 				<rect x="0" y="164.75" width="21.6" height="7.2" class="st1"/>
 			</g>
@@ -207,7 +207,7 @@
 		</g>
 		<g id="group78-112" transform="translate(-77.975,164.375) rotate(-90)" v:mID="78" v:groupContext="group">
 			<title>Sheet.78</title>
-			<g id="shape79-113" v:mID="79" v:groupContext="shape" transform="translate(7.2,0)">
+			<g id="shape79-113" v:mID="79" v:groupContext="shape" transform="translate(7.2,2.84217E-14)">
 				<title>Sheet.79</title>
 				<rect x="0" y="164.75" width="21.6" height="7.2" class="st1"/>
 			</g>
@@ -322,7 +322,7 @@
 			<v:textRect cx="10.8" cy="161.95" width="21.61" height="20"/>
 			<rect x="0" y="151.95" width="21.6" height="20" class="st5"/>
 			<text x="6.25" y="164.35" class="st8" v:langID="2057"><v:paragraph v:horizAlign="1"/><v:tabList/>cw</text>		</g>
-		<g id="shape117-183" v:mID="117" v:groupContext="shape" transform="translate(119.175,-48.775)">
+		<g id="shape117-183" v:mID="117" v:groupContext="shape" transform="translate(119.175,-33.655)">
 			<title>Sheet.117</title>
 			<desc>cw</desc>
 			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>

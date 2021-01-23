@@ -62,6 +62,12 @@ void Potentiometer::read(const QJsonObject &json)
         setLabel(json["function"].toString());
     }
 
+    if (json.contains("ganged") && json["ganged"].isBool()) {
+        ganged = json["ganged"].toBool();
+    } else {
+        ganged = false;
+    }
+
     typeSelect->setCurrentIndex(type);
 
     position = 49;
@@ -76,6 +82,12 @@ void Potentiometer::write(QJsonObject &json) const
 
     json["type"] = type;
     json["function"] = labelText;
+    json["ganged"] = ganged;
+}
+
+bool Potentiometer::isGanged() const
+{
+    return ganged;
 }
 
 void Potentiometer::alterModel()
@@ -88,27 +100,34 @@ void Potentiometer::alterModel()
     default:
     case POT_LIN: // Linear
     case POT_STYPE: // Linear for now
+    case POT_RLOG: // Linear for now
         factor = ((double) position) / 99.0;
         break;
     case POT_LOG: // Log
         factor = pow(99.0, ((double) position) / 99.0) / 99.0;
         //factor = logFunction(((double) position) / 99.0, 0.12);
         break;
-    case POT_LOGA: // Log
+    case POT_LOGA: // Log A
         //factor = pow(99.0, sqrt(((double) position) / 99.0)) / 99.0;
         factor = logFunction(((double) position) / 99.0, 0.25);
         break;
-    case POT_RLOG: // Reverse Log - needs to be fixed (currently just Log)
-        factor = logFunction(((double) position) / 99.0, 0.88);
     }
 
     rlo = value * factor;
     rhi = value - rlo;
 
+    alterPot(rlo, rhi, false);
+
+    if (ganged) {
+        alterPot(rlo, rhi, true);
+    }
+}
+
+void Potentiometer::alterPot(int rlo, int rhi, bool gang) {
     char alterHiCmd[256];
-    sprintf(alterHiCmd, "alter rp%dhi=%d", id, rhi);
+    sprintf(alterHiCmd, "alter rp%dhi%s=%d", id, gang ? "2" : "", rhi);
     char alterLoCmd[256];
-    sprintf(alterLoCmd, "alter rp%dlo=%d", id, rlo);
+    sprintf(alterLoCmd, "alter rp%dlo%s=%d", id, gang ? "2" : "", rlo);
 
     spice(alterHiCmd);
     spice(alterLoCmd);
