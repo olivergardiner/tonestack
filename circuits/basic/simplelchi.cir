@@ -17,9 +17,8 @@ R98 1 2 1K
 
 ******* PLACE YOUR CIRCUIT HERE *******
 
-R1 10 3 9MEG
-L1 0 10 2.5H
-C1 2 10 10N
+L1 0 3 2.5H
+C1 2 3 10N
 
 ******* PLACE YOUR CIRCUIT HERE *******
 

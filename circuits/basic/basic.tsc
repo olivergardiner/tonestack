@@ -139,6 +139,7 @@
         },
 		{
             "circuitname": "Simple LC High Pass",
+			"range": 1,
             "command": "source ../circuits/basic/simplelchi.cir",
             "image": "../circuits/basic/simplelchi.png",
             "rS": {
@@ -150,10 +151,6 @@
                 "value": 1000000
             },
             "resistors": [
-                {
-                    "id": 1,
-                    "value": 9000000
-                }
             ],
             "capacitors": [
                 {
@@ -170,6 +167,7 @@
         },
 		{
             "circuitname": "Simple LC Low Pass",
+			"range": 1,
             "command": "source ../circuits/basic/simplelclo.cir",
             "image": "../circuits/basic/simplelclo.png",
             "rS": {
@@ -181,10 +179,6 @@
                 "value": 1000000
             },
             "resistors": [
-                {
-                    "id": 1,
-                    "value": 9000000
-                }
             ],
             "capacitors": [
                 {

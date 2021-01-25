@@ -2,6 +2,7 @@
     "circuits": [
         {
             "circuitname": "Pearl OD5 Band Filter",
+			"range": 1,
             "command": "source ../circuits/active/pearlod5.cir",
             "image": "../circuits/active/pearlod5.png",
             "rS": {

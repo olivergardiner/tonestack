@@ -17,6 +17,12 @@ void Circuit::read(const QJsonObject &json)
         spice(command.toStdString().c_str());
     }
 
+    if (json.contains("range") && json["range"].isDouble()) {
+        range = json["range"].toInt();
+    } else {
+        range = 0; // Default value which corresponds to 0dB to -40dB
+    }
+
     if (json.contains("image") && json["image"].isString()) {
         image = json["image"].toString();
 
@@ -110,6 +116,7 @@ void Circuit::write(QJsonObject &json) const
     QJsonObject currentCircuit;
 
     currentCircuit["circuitname"] = circuitName;
+    currentCircuit["range"] = range;
     currentCircuit["image"] = image;
     currentCircuit["command"] = command;
 
@@ -217,4 +224,9 @@ QString Circuit::getCircuitName() const
 void Circuit::setCircuitName(const QString &value)
 {
     circuitName = value;
+}
+
+int Circuit::getRange() const
+{
+    return range;
 }

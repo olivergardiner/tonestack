@@ -14,6 +14,9 @@ bool errorflag = false;
 #define spice(X) (ngSpice_Command(const_cast <char *>(X)))
 #define magnitude(X) (sqrt(X.cx_real * X.cx_real + X.cx_imag * X.cx_imag))
 
+int ranges = 2;
+int rangeStart[2] = {0, 20};
+
 ToneStackCalculator::ToneStackCalculator(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::ToneStackCalculator)
@@ -92,17 +95,13 @@ void ToneStackCalculator::buildFrequencyResponseScene()
     text = scene.addText("100kHz");
     text->setPos(400.0 - 20, -30);
 
-    text = scene.addText("0dB");
-    text->setPos(-40, 0.0 - 10);
-    text = scene.addText("-10dB");
-    text->setPos(-50, 100.0 - 10);
-    text = scene.addText("-20dB");
-    text->setPos(-50, 200.0 - 10);
-    text = scene.addText("-30dB");
-    text->setPos(-50, 300.0 - 10);
-    text = scene.addText("-40dB");
-    text->setPos(-50, 400.0 - 10);
+    for (int r=0; r < ranges; r++) {
+        range[r] = createRange(rangeStart[r]);
 
+        if (r > 0) {
+            range[r]->setVisible(false);
+        }
+    }
 
     for (int i=1; i < 41; i++) {
         if ((i % 10) == 0) {
@@ -126,6 +125,34 @@ void ToneStackCalculator::buildFrequencyResponseScene()
             }
         }
     }
+}
+
+QGraphicsItemGroup *ToneStackCalculator::createRange(int start)
+{
+    QList<QGraphicsItem *> labels;
+
+    for (int i=0; i < 5; i++) {
+        QGraphicsTextItem *text;
+        char labelText[16];
+        sprintf(labelText, "%s%ddB", (start > 0) ? "+" : "", start);
+        text = scene.addText(labelText);
+        double x = (start == 0) ? -40.0 : -50.0;
+        text->setPos(x, 100.0 * i - 10);
+        labels.append(text);
+
+        start -= 10;
+    }
+
+    return scene.createItemGroup(labels);
+}
+
+void ToneStackCalculator::showRange(int r)
+{
+    for (int i=0; i < ranges; i++) {
+        range[i]->setVisible(i == r);
+    }
+
+    currentRange = r;
 }
 
 void ToneStackCalculator::buildCircuitSelection()
@@ -160,6 +187,7 @@ void ToneStackCalculator::setStack(int stack)
         circuit->read(currentCircuit.toObject());
     }
 
+    showRange(circuit->getRange());
     currentStack = stack;
     filename = tr("");
     ui->actionSave->setEnabled(false);
@@ -210,11 +238,17 @@ void ToneStackCalculator::createPlot()
     QPen plotPen;
     plotPen.setColor(plotColour);
 
+    qreal offset = 10.0 * rangeStart[currentRange];
     qreal interval = decade / 40;
-    qreal y = log10(magnitude(myvec->v_compdata[0]) + 1e-9) * -200;
+    qreal y = log10(magnitude(myvec->v_compdata[0]) + 1e-9) * -200 + offset;
+    if (y < 0) {
+        y = 0;
+    } else if (y > 400) {
+        y = 400;
+    }
 
     for (int i=1;i < veclength; i++) {
-        qreal newy = log10(magnitude(myvec->v_compdata[i]) + 1e-9) * -200;
+        qreal newy = log10(magnitude(myvec->v_compdata[i]) + 1e-9) * -200 + offset;
         if (newy < 0) {
             newy = 0;
         }

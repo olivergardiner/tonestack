@@ -124,6 +124,10 @@ private:
     QGraphicsItemGroup *savedPlot[256];
     int savedPlots = 0;
 
+    QGraphicsItemGroup *range[8];
+
+    int currentRange = 0;
+
     QImage *circuitImage = nullptr;
 
     qreal decade;
@@ -142,6 +146,10 @@ private:
     void buildCircuitSelection();
 
     void createPlot();
+
+    QGraphicsItemGroup *createRange(int start);
+
+    void showRange(int r);
 
     bool waitSimulationEnd();
 

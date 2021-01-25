@@ -33,6 +33,8 @@ public:
     QString getCircuitName() const;
     void setCircuitName(const QString &value);
 
+    int getRange() const;
+
 protected:
     circuitUiMap *uiMap;
 
@@ -46,6 +48,7 @@ private:
     bool pot1;
     bool pot2;
     bool pot3;
+    int range;
 };
 
 #endif // CIRCUIT_H

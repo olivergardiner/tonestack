@@ -78,9 +78,9 @@
 				<path d="M0 71.15 L7.2 71.15" class="st2"/>
 			</g>
 		</g>
-		<g id="shape76-31" v:mID="76" v:groupContext="shape" transform="translate(183.975,-43.575)">
+		<g id="shape76-31" v:mID="76" v:groupContext="shape" transform="translate(140.775,-43.575)">
 			<title>Sheet.76</title>
-			<path d="M7.2 71.15 L7.2 63.95 L0 63.95" class="st2"/>
+			<path d="M50.4 71.15 L50.4 63.95 L0 63.95" class="st2"/>
 		</g>
 		<g id="group80-34" transform="translate(0.375,-7.575)" v:mID="80" v:groupContext="group">
 			<title>Sheet.80</title>
@@ -220,31 +220,5 @@
 			<v:textRect cx="14.4" cy="61.15" width="28.81" height="20"/>
 			<rect x="0" y="51.15" width="28.8" height="20" class="st5"/>
 			<text x="9.17" y="64.75" class="st6" v:langID="2057"><v:paragraph v:horizAlign="1"/><v:tabList/>C<tspan class="st7">1</tspan></text>		</g>
-		<g id="group117-122" transform="translate(147.975,-47.175)" v:mID="117" v:groupContext="group">
-			<title>Sheet.117</title>
-			<g id="shape118-123" v:mID="118" v:groupContext="shape" transform="translate(7.2,0)">
-				<title>Sheet.118</title>
-				<rect x="0" y="63.95" width="21.6" height="7.2" class="st1"/>
-			</g>
-			<g id="shape119-125" v:mID="119" v:groupContext="shape" transform="translate(1.59872E-14,-3.6)">
-				<title>Sheet.119</title>
-				<path d="M0 71.15 L7.2 71.15" class="st2"/>
-			</g>
-			<g id="shape120-128" v:mID="120" v:groupContext="shape" transform="translate(28.8,-3.6)">
-				<title>Sheet.120</title>
-				<path d="M0 71.15 L7.2 71.15" class="st2"/>
-			</g>
-		</g>
-		<g id="shape121-131" v:mID="121" v:groupContext="shape" transform="translate(151.575,-50.775)">
-			<title>Sheet.121</title>
-			<desc>R1</desc>
-			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
-			<v:textRect cx="14.4" cy="61.15" width="28.81" height="20"/>
-			<rect x="0" y="51.15" width="28.8" height="20" class="st5"/>
-			<text x="9.11" y="64.75" class="st6" v:langID="2057"><v:paragraph v:horizAlign="1"/><v:tabList/>R<tspan class="st7">1</tspan></text>		</g>
-		<g id="shape122-135" v:mID="122" v:groupContext="shape" transform="translate(147.975,91.525) rotate(180)">
-			<title>Sheet.122</title>
-			<path d="M0 71.15 L7.2 71.15" class="st2"/>
-		</g>
 	</g>
 </svg>
