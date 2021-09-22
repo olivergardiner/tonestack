@@ -1105,6 +1105,8 @@
      <string>Help</string>
     </property>
     <addaction name="actionAbout"/>
+    <addaction name="actionTonestack_Help"/>
+    <addaction name="actionPreferences"/>
    </widget>
    <widget class="QMenu" name="menuMode">
     <property name="title">
@@ -1201,6 +1203,24 @@
    </property>
    <property name="text">
     <string>Active Circuits Mode</string>
+   </property>
+  </action>
+  <action name="actionUser_Circuits_Mode">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>User Circuits Mode</string>
+   </property>
+  </action>
+  <action name="actionTonestack_Help">
+   <property name="text">
+    <string>Tonestack Help</string>
+   </property>
+  </action>
+  <action name="actionPreferences">
+   <property name="text">
+    <string>Preferences...</string>
    </property>
   </action>
  </widget>

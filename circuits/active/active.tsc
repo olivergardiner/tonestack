@@ -48,6 +48,128 @@
             ],
             "inductors": [
             ]
+        },
+        {
+            "circuitname": "Vortex Drive Band Filter",
+			"range": 1,
+            "command": "source ../circuits/active/vortex.cir",
+            "image": "../circuits/active/vortex.png",
+            "rS": {
+                "id": 98,
+                "value": 1
+            },
+            "rL": {
+                "id": 99,
+                "value": 10000
+            },
+            "pot1": {
+                "function": "Boost/Cut",
+                "id": 1,
+                "type": 0,
+                "value": 10000
+            },
+            "pot3": {
+                "function": "Frequency",
+                "id": 3,
+                "type": 0,
+                "value": 100000
+            },
+            "resistors": [
+                {
+                    "id": 1,
+                    "value": 200000
+                },
+                {
+                    "id": 2,
+                    "value": 8200
+                },
+                {
+                    "id": 3,
+                    "value": 220000
+                }
+            ],
+            "capacitors": [
+                {
+                    "id": 1,
+                    "value": 12000
+                },
+                {
+                    "id": 2,
+                    "value": 4700
+                },
+                {
+                    "id": 3,
+                    "value": 12000
+                }
+            ],
+            "inductors": [
+            ]
+        },
+        {
+            "circuitname": "Secret Freq Band Filter",
+			"range": 1,
+            "command": "source ../circuits/active/secretfreq.cir",
+            "image": "../circuits/active/secretfreq.png",
+            "rS": {
+                "id": 98,
+                "value": 820
+            },
+            "rL": {
+                "id": 99,
+                "value": 10000
+            },
+            "pot2": {
+                "function": "Frequency",
+                "id": 2,
+                "type": 0,
+                "value": 100000
+            },
+            "resistors": [
+                {
+                    "id": 1,
+                    "value": 9100
+                },
+                {
+                    "id": 2,
+                    "value": 10000
+                },
+                {
+                    "id": 3,
+                    "value": 39000
+                },
+                {
+                    "id": 4,
+                    "value": 82000
+                },
+                {
+                    "id": 5,
+                    "value": 1000
+                }
+            ],
+            "capacitors": [
+                {
+                    "id": 1,
+                    "value": 100000
+                },
+                {
+                    "id": 2,
+                    "value": 10000
+                },
+                {
+                    "id": 3,
+                    "value": 100000
+                },
+                {
+                    "id": 4,
+                    "value": 33000
+                },
+                {
+                    "id": 5,
+                    "value": 10000
+                }
+            ],
+            "inductors": [
+            ]
         }
 	]
 }
