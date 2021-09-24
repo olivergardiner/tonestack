@@ -36,6 +36,10 @@ ToneStackCalculator::ToneStackCalculator(QWidget *parent)
     uiMap.pot3 = new Potentiometer(ui->pot3Position, ui->pot3Value, ui->pot3Type, ui->pot3Label, 3);
     uiMap.pot4 = nullptr; // Not yet supported by the UI
 
+    uiMap.pot1->setSweeper(&settingsDialog);
+    uiMap.pot2->setSweeper(&settingsDialog);
+    uiMap.pot3->setSweeper(&settingsDialog);
+
     uiMap.resistors[0] = new Resistor(ui->r1Label, ui->r1Value, 1);
     uiMap.resistors[1] = new Resistor(ui->r2Label, ui->r2Value, 2);
     uiMap.resistors[2] = new Resistor(ui->r3Label, ui->r3Value, 3);
@@ -787,4 +791,14 @@ void ToneStackCalculator::on_actionActive_Circuits_Mode_triggered()
     ui->actionTone_Stack_Mode->setChecked(false);
     ui->actionBasic_Electronics_Mode->setChecked(false);
     ui->actionActive_Circuits_Mode->setChecked(true);
+}
+
+void ToneStackCalculator::on_actionSettings_triggered()
+{
+    if (settingsDialog.exec() == 1) {
+        uiMap.pot1->setTextValue(toString(ui->pot1Value->text()));
+        uiMap.pot2->setTextValue(toString(ui->pot2Value->text()));
+        uiMap.pot3->setTextValue(toString(ui->pot3Value->text()));
+        createPlot();
+    }
 }

@@ -1099,6 +1099,7 @@
     <addaction name="actionSave_As"/>
     <addaction name="actionQuit"/>
     <addaction name="actionPrint"/>
+    <addaction name="actionSettings"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -1221,6 +1222,11 @@
   <action name="actionPreferences">
    <property name="text">
     <string>Preferences...</string>
+   </property>
+  </action>
+  <action name="actionSettings">
+   <property name="text">
+    <string>Settings...</string>
    </property>
   </action>
  </widget>

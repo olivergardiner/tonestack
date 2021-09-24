@@ -17,6 +17,7 @@ SOURCES += \
     namedialog.cpp \
     potentiometer.cpp \
     resistor.cpp \
+    settingsdialog.cpp \
     tonestackcalculator.cpp
 
 HEADERS += \
@@ -27,11 +28,14 @@ HEADERS += \
     namedialog.h \
     ngspice/sharedspice.h \
     potentiometer.h \
+    potsweep.h \
     resistor.h \
+    settingsdialog.h \
     tonestackcalculator.h
 
 FORMS += \
     namedialog.ui \
+    settingsdialog.ui \
     tonestackcalculator.ui
 
 # Default rules for deployment.

@@ -36,6 +36,31 @@ void Potentiometer::setPosition(int position)
     alterModel();
 }
 
+double Potentiometer::getPotFactor(int potType)
+{
+    if (potType < 0 || potType > POT_STYPE) {
+        return -1.0;
+    }
+
+    return potFactor[potType];
+}
+
+void Potentiometer::setPotFactor(int potType, double factor)
+{
+    if (potType < 0 || potType > POT_STYPE) {
+        return;
+    }
+
+    potFactor[potType] = factor;
+}
+
+void Potentiometer::setPotFactor(int potType, QList<double> factors)
+{
+    for (int type = 0; type < POT_STYPE + 1; type++) {
+        potFactor[type] = factors.at(type);
+    }
+}
+
 void Potentiometer::setLabel(QString labelText)
 {
     this->labelText = labelText;
@@ -90,27 +115,37 @@ bool Potentiometer::isGanged() const
     return ganged;
 }
 
+void Potentiometer::setSweeper(PotSweep *value)
+{
+    sweeper = value;
+}
+
 void Potentiometer::alterModel()
 {
     int rlo;
     int rhi;
     double factor = 0.5;
+    double potPosition = ((double) position) / 99.0;
 
-    switch (type) {
-    default:
-    case POT_LIN: // Linear
-    case POT_STYPE: // Linear for now
-    case POT_RLOG: // Linear for now
-        factor = ((double) position) / 99.0;
-        break;
-    case POT_LOG: // Log
-        factor = pow(99.0, ((double) position) / 99.0) / 99.0;
-        //factor = logFunction(((double) position) / 99.0, 0.12);
-        break;
-    case POT_LOGA: // Log A
-        //factor = pow(99.0, sqrt(((double) position) / 99.0)) / 99.0;
-        factor = logFunction(((double) position) / 99.0, 0.25);
-        break;
+    if (sweeper) {
+        factor = sweeper->taperFunction(type, potPosition);
+    } else {
+        switch (type) {
+        default:
+        case POT_STYPE: // Linear for now
+        case POT_LIN: // Linear
+            factor = potPosition;
+            break;
+        case POT_LOG: // Log
+            // factor = pow(99.0, ((double) position) / 99.0) / 99.0;
+            // break;
+        case POT_LOGA: // Log A
+            // factor = pow(99.0, sqrt(((double) position) / 99.0)) / 99.0;
+            // break;
+        case POT_RLOG: // Reverse Log
+            factor = logFunction(potPosition, potFactor[type]);
+            break;
+        }
     }
 
     rlo = value * factor;
@@ -149,8 +184,15 @@ double Potentiometer::logFunction(double x, double ym)
     // b = ((1 / ym) - 1)^2
     // a = 1 / (b - 1)
 
-    double b = pow((1.0 / ym) - 1.0, 2);
-    double a = 1 / (b - 1);
+    //double b = pow((1.0 / ym) - 1.0, 2);
+    double b = ((1.0 / ym) - 1.0);
+    b = b * b;
+
+    if (b == 1) { // Linear curve but equation then blows up as a becomes infinite so trap and return explicit linear
+        return x;
+    }
+
+    double a = 1 / (b - 1.0);
 
     return a * pow(b, x) - a;
 }

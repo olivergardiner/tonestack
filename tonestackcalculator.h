@@ -19,6 +19,7 @@
 #include "inductor.h"
 #include "circuit.h"
 #include "namedialog.h"
+#include "settingsdialog.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class ToneStackCalculator; }
@@ -113,6 +114,8 @@ private slots:
 
     void on_actionActive_Circuits_Mode_triggered();
 
+    void on_actionSettings_triggered();
+
 private:
     Ui::ToneStackCalculator *ui;
 
@@ -140,6 +143,8 @@ private:
     Circuit *circuit;
 
     QString filename;
+
+    SettingsDialog settingsDialog;
 
     void buildFrequencyResponseScene();
 

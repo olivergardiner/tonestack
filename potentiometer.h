@@ -9,16 +9,9 @@
 
 #include "resistor.h"
 #include "ngspice/sharedspice.h"
+#include "potsweep.h"
 
 #define POT_MAX 99
-
-enum potType {
-    POT_LIN,
-    POT_LOG,
-    POT_LOGA,
-    POT_RLOG,
-    POT_STYPE
-};
 
 typedef struct pot {
     char label[32];
@@ -38,6 +31,10 @@ public:
     int getPosition() const;
     void setPosition(int position);
 
+    double getPotFactor(int potType);
+    void setPotFactor(int potType, double factor);
+    void setPotFactor(int potType, QList<double> factors);
+
     void setLabel(QString label);
     void setVisible(bool visible);
 
@@ -46,7 +43,10 @@ public:
 
     bool isGanged() const;
 
+    void setSweeper(PotSweep *value);
+
 private:
+    PotSweep *sweeper = nullptr;
     QDial *dial;
     QComboBox *typeSelect;
 
@@ -55,6 +55,8 @@ private:
     int position = POT_MAX / 2;
     bool ganged;
     int id;
+
+    double potFactor[POT_STYPE + 1] = { 0.5, 0.12, 0.25, 0.88, 0.5};
 
     int getPotTypeIndex(potType type);
 
