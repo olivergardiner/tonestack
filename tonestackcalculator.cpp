@@ -70,6 +70,8 @@ ToneStackCalculator::ToneStackCalculator(QWidget *parent)
     ui->frequencyResponse->setScene(&scene);
 
     buildCircuitSelection();
+
+    helpBrowser.setHelp("/help/tonestack.qhc", "whitecottage.tonestack.help/doc/index.html");
 }
 
 ToneStackCalculator::~ToneStackCalculator()
@@ -428,7 +430,12 @@ int ciprefix(const char* p, const char* s)
 
 void ToneStackCalculator::on_actionAbout_triggered()
 {
-
+    QMessageBox::about(this, tr("About Tonestack"),
+                       tr("Tonestack " TONESTACK_VERSION "\n\n"
+                          "Tonestack is a circuit simulation application for analysing passive and active tone stacks and filters\n\n"
+                          "Circuit simulation is implemented using NgSpice\n\n"
+                          "whitecottage.org.uk/tonestack-calculator/\n\n"
+                          "Tonestack is free software and distributed under the GNU General Public Licence v3.0"));
 }
 
 void ToneStackCalculator::on_actionQuit_triggered()
@@ -801,4 +808,9 @@ void ToneStackCalculator::on_actionSettings_triggered()
         uiMap.pot3->setTextValue(toString(ui->pot3Value->text()));
         createPlot();
     }
+}
+
+void ToneStackCalculator::on_actionTonestack_Help_triggered()
+{
+    helpBrowser.show();
 }

@@ -10,6 +10,7 @@
 #include <QJsonArray>
 #include <QPrinter>
 #include <QPrintDialog>
+#include <QMessageBox>
 
 #include "ngspice/sharedspice.h"
 
@@ -20,6 +21,9 @@
 #include "circuit.h"
 #include "namedialog.h"
 #include "settingsdialog.h"
+#include "helpbrowser.h"
+
+#define TONESTACK_VERSION "1.1.16"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class ToneStackCalculator; }
@@ -116,6 +120,8 @@ private slots:
 
     void on_actionSettings_triggered();
 
+    void on_actionTonestack_Help_triggered();
+
 private:
     Ui::ToneStackCalculator *ui;
 
@@ -145,6 +151,8 @@ private:
     QString filename;
 
     SettingsDialog settingsDialog;
+
+    HelpBrowser helpBrowser;
 
     void buildFrequencyResponseScene();
 

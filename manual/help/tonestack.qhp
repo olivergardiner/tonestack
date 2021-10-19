@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QtHelpProject version="1.0">
+    <namespace>whitecottage.tonestack.help</namespace>
+    <virtualFolder>doc</virtualFolder>
+    <filterSection>
+        <toc>
+            <section title="Tonestack Help" ref="index.html">
+                <section title="Using Tonestack" ref="using/using_tonestack.html">
+					<section title="Circuit selection" ref="using/circuit_selection.html"></section>
+					<section title="Setting component values" ref="using/component_values.html"></section>
+					<section title="Managing plots" ref="using/plots.html"></section>
+					<section title="Circuit saving and loading" ref="using/save_load.html"></section>
+					<section title="Settings" ref="using/settings.html">
+						<section title="Potentiometer tapers" ref="using/pot_tapers.html"></section>
+					</section>
+				</section>
+                <section title="The circuits" ref="circuits/circuits.html">
+					<section title="Fender" ref="circuits/fender.html"></section>
+					<section title="Marshall" ref="circuits/marshall.html"></section>
+					<section title="Bench" ref="circuits/bench.html"></section>
+					<section title="Vox" ref="circuits/vox.html"></section>
+					<section title="James" ref="circuits/james.html"></section>
+					<section title="Baxendall" ref="circuits/baxendall.html"></section>
+					<section title="Voigt" ref="circuits/voigt.html"></section>
+					<section title="Bone Ray" ref="circuits/boneray.html"></section>
+					<section title="Bandmaster" ref="circuits/bandmaster.html"></section>
+					<section title="Tube Driver" ref="circuits/tubedriver.html"></section>
+					<section title="Marshall 18W" ref="circuits/marshall18.html"></section>
+					<section title="Big Muff" ref="circuits/bigmuff.html"></section>
+					<section title="Moonlight" ref="circuits/moonlight.html"></section>
+					<section title="Pearl OD5" ref="circuits/pearl_od5.html"></section>
+					<section title="Vortex Drive" ref="circuits/vortex.html"></section>
+					<section title="Secret Freq" ref="circuits/secret_freq.html"></section>
+				</section>
+                <section title="Circuit definition reference" ref="reference/definition.html"></section>
+            </section>
+        </toc>
+        <keywords>
+            <keyword name="Fender" ref="circuits/fender.html"/>
+        </keywords>
+        <files>
+            <file>index.html</file>
+            <file>using/using_tonestack.html</file>
+            <file>using/circuit_selection.html</file>
+            <file>using/component_values.html</file>
+            <file>using/plots.html</file>
+            <file>using/save_load.html</file>
+            <file>using/settings.html</file>
+            <file>using/pot_tapers.html</file>
+            <file>circuits/circuits.html</file>
+            <file>circuits/fender.html</file>
+            <file>circuits/marshall.html</file>
+            <file>circuits/bench.html</file>
+            <file>circuits/vox.html</file>
+            <file>circuits/james.html</file>
+            <file>circuits/baxendall.html</file>
+            <file>circuits/voigt.html</file>
+            <file>circuits/boneray.html</file>
+            <file>circuits/bandmaster.html</file>
+            <file>circuits/tubedriver.html</file>
+            <file>circuits/marshall18.html</file>
+            <file>circuits/bigmuff.html</file>
+            <file>circuits/moonlight.html</file>
+            <file>circuits/vox.html</file>
+            <file>circuits/pearl_od5.html</file>
+            <file>circuits/secret_freq.html</file>
+            <file>circuits/secretfreq.png</file>
+            <file>circuits/vortex.html</file>
+            <file>reference/definition.html</file>
+        </files>
+    </filterSection>
+</QtHelpProject>

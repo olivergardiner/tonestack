@@ -1,4 +1,4 @@
-QT       += core gui printsupport
+QT       += core gui printsupport help
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -12,6 +12,8 @@ SOURCES += \
     capacitor.cpp \
     circuit.cpp \
     circuitelement.cpp \
+    helpbrowser.cpp \
+    helptextviewer.cpp \
     inductor.cpp \
     main.cpp \
     namedialog.cpp \
@@ -24,6 +26,8 @@ HEADERS += \
     capacitor.h \
     circuit.h \
     circuitelement.h \
+    helpbrowser.h \
+    helptextviewer.h \
     inductor.h \
     namedialog.h \
     ngspice/sharedspice.h \
@@ -34,6 +38,7 @@ HEADERS += \
     tonestackcalculator.h
 
 FORMS += \
+    helpbrowser.ui \
     namedialog.ui \
     settingsdialog.ui \
     tonestackcalculator.ui

@@ -1107,15 +1107,14 @@
     </property>
     <addaction name="actionAbout"/>
     <addaction name="actionTonestack_Help"/>
-    <addaction name="actionPreferences"/>
    </widget>
    <widget class="QMenu" name="menuMode">
     <property name="title">
      <string>Mode</string>
     </property>
     <addaction name="actionTone_Stack_Mode"/>
-    <addaction name="actionBasic_Electronics_Mode"/>
     <addaction name="actionActive_Circuits_Mode"/>
+    <addaction name="actionBasic_Electronics_Mode"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuMode"/>
@@ -1218,10 +1217,8 @@
    <property name="text">
     <string>Tonestack Help</string>
    </property>
-  </action>
-  <action name="actionPreferences">
-   <property name="text">
-    <string>Preferences...</string>
+   <property name="shortcut">
+    <string>F1</string>
    </property>
   </action>
   <action name="actionSettings">
