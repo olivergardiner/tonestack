@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QGraphicsScene>
 #include <QGraphicsItemGroup>
+#include <QGraphicsTextItem>
 #include <QFileDialog>
 #include <QColorDialog>
 #include <QJsonDocument>
