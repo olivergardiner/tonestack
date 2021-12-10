@@ -1,2 +1,5 @@
 *.dll
 *.~vsdx
+debug/
+release/
+.vs/
