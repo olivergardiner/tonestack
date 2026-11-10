@@ -1,4 +1,5 @@
 #include "circuit.h"
+#include "assetpaths.h"
 
 #include <QFile>
 #include <QJsonDocument>
@@ -11,10 +12,11 @@ Circuit::Circuit(circuitUiMap *uiMap)
 
 void Circuit::read(const QJsonObject &json)
 {
+    circuitName = json.value("circuitname").toString();
     if (json.contains("command") && json["command"].isString()) {
         command = json["command"].toString();
 
-        spice(command.toStdString().c_str());
+        spice(AssetPaths::resolved(json)["command"].toString().toLocal8Bit().constData());
     }
 
     if (json.contains("range") && json["range"].isDouble()) {
@@ -26,7 +28,7 @@ void Circuit::read(const QJsonObject &json)
     if (json.contains("image") && json["image"].isString()) {
         image = json["image"].toString();
 
-        QPixmap circuitImage(image);
+        QPixmap circuitImage(AssetPaths::resolve(image));
         circuitImage = circuitImage.scaled(469, 326, Qt::KeepAspectRatio, Qt::SmoothTransformation);
         uiMap->circuitDisplay->setPixmap(circuitImage);
     }
@@ -187,6 +189,9 @@ void Circuit::saveCircuit(QString filename)
     } else {
         QJsonObject circuitObject;
         write(circuitObject);
+        auto entries=circuitObject["circuits"].toArray();
+        entries[0]=AssetPaths::forSave(entries[0].toObject(),QFileInfo(filename).absolutePath());
+        circuitObject["circuits"]=entries;
         saveFile.write(QJsonDocument(circuitObject).toJson());
     }
 }
@@ -209,7 +214,7 @@ void Circuit::openCircuit(QString filename)
 
                 QJsonValue circuitObject = config["circuits"].toArray().at(0);
                 if (circuitObject.isObject()) {
-                    read(circuitObject.toObject());
+                    read(AssetPaths::resolved(circuitObject.toObject(), QFileInfo(filename).absolutePath()));
                 }
             }
         }

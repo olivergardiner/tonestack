@@ -24,7 +24,7 @@
 #include "settingsdialog.h"
 #include "helpbrowser.h"
 
-#define TONESTACK_VERSION "1.1.16"
+#define TONESTACK_VERSION "1.1.17"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class ToneStackCalculator; }
@@ -33,6 +33,8 @@ QT_END_NAMESPACE
 class ToneStackCalculator : public QMainWindow
 {
     Q_OBJECT
+    friend class ConfigurationTest;
+    friend class NumericalTest;
 
 public:
     ToneStackCalculator(QWidget *parent = nullptr);
@@ -98,6 +100,7 @@ private slots:
     void on_rLValue_editingFinished();
 
     void on_resetButton_clicked();
+    void on_centrePotsButton_clicked();
 
     void on_actionOpen_triggered();
 
@@ -131,8 +134,25 @@ private:
 
     QColor plotColour;
     QGraphicsItemGroup *plot = nullptr;
-    QGraphicsItemGroup *savedPlot[256];
-    int savedPlots = 0;
+    struct Comparison {
+        QString name;
+        QColor colour;
+        QJsonObject configuration;
+        QVector<double> magnitudes;
+        bool visible = true;
+        QGraphicsItemGroup *trace = nullptr;
+    };
+    QVector<Comparison> comparisons;
+    QVector<double> currentResponse;
+    QJsonObject responseConfiguration;
+    QJsonObject requestedConfiguration;
+    bool responseCurrent = false;
+    QGraphicsItemGroup *drawTrace(const QVector<double> &values, const QColor &colour);
+    void redrawComparisons();
+    bool addComparison(const QString &name);
+    void restoreComparisonAt(int index);
+    void deleteComparisonAt(int index);
+    void updateComparisonButtons();
 
     QGraphicsItemGroup *range[8];
 
@@ -165,29 +185,14 @@ private:
 
     void showRange(int r);
 
-    bool waitSimulationEnd();
+    void renderPlot(const QVector<double> &magnitudes);
+    SimulationController simulation;
 
     void setStack(int stack);
 
-    char *toString(QString source);
+    bool saveToFile(const QString &path);
 
     void readConfig(QString configFile);
 };
-
-int ng_getchar(char* outputreturn, int ident, void* userdata);
-
-int ng_getstat(char* outputreturn, int ident, void* userdata);
-
-int ng_exit(int, bool, bool, int ident, void*);
-
-int ng_thread_runs(bool noruns, int ident, void* userdata);
-
-int ng_initdata(pvecinfoall intdata, int ident, void* userdata);
-
-int ng_data(pvecvaluesall vdata, int numvecs, int ident, void* userdata);
-
-int cieq(char* p, char* s);
-
-int ciprefix(const char* p, const char* s);
 
 #endif // TONESTACKCALCULATOR_H

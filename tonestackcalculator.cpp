@@ -1,27 +1,42 @@
 #include "tonestackcalculator.h"
-#include "ui_tonestackcalculator.h"
-#include <tchar.h>
-#if defined(__MINGW32__) || defined(_MSC_VER)
-#include <windows.h>
-#endif
+#include "assetpaths.h"
+#include <ui_tonestackcalculator.h>
+#include <QSignalBlocker>
+#include <QSaveFile>
+#include <QStatusBar>
+#include <QInputDialog>
+#include <QTreeWidget>
+#include <QHeaderView>
+#include <algorithm>
+#include <QStyledItemDelegate>
 
-bool no_bg = true;
-int vecgetnumber = 0;
-double v2dat;
-bool has_break = false;
-bool errorflag = false;
+class ComparisonNameDelegate : public QStyledItemDelegate
+{
+public:
+    using QStyledItemDelegate::QStyledItemDelegate;
+    QWidget *createEditor(QWidget *parent,const QStyleOptionViewItem &option,const QModelIndex &index) const override
+    {
+        return index.column()==0 ? QStyledItemDelegate::createEditor(parent,option,index) : nullptr;
+    }
+};
 
-#define spice(X) (ngSpice_Command(const_cast <char *>(X)))
-#define magnitude(X) (sqrt(X.cx_real * X.cx_real + X.cx_imag * X.cx_imag))
-
-int ranges = 2;
-int rangeStart[2] = {0, 20};
+int ranges = 3;
+int rangeStart[3] = {0, 20, 40};
 
 ToneStackCalculator::ToneStackCalculator(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::ToneStackCalculator)
 {
-    ngSpice_Init(ng_getchar, ng_getstat, ng_exit, ng_data, ng_initdata, ng_thread_runs, NULL);
+    connect(&simulation, &SimulationController::ready, this, &ToneStackCalculator::renderPlot);
+    connect(&simulation, &SimulationController::failed, this, [this](const QString &error) {
+        statusBar()->showMessage(tr("Simulation failed: ") + error);
+    });
+    connect(&simulation, &SimulationController::busyChanged, this, [this](bool busy) {
+        if (busy) {
+            statusBar()->showMessage(tr("Simulating..."));
+            ui->pushButton->setEnabled(false);
+        }
+    });
 
     readConfig(tr("tonestacks.tsc"));
 
@@ -30,6 +45,41 @@ ToneStackCalculator::ToneStackCalculator(QWidget *parent)
     plotColour = QColor(191, 40, 40, 255);
 
     ui->setupUi(this);
+    menuBar()->addMenu(tr("View"))->addAction(ui->comparisonsDock->toggleViewAction());
+    ui->comparisonsList->setItemDelegate(new ComparisonNameDelegate(ui->comparisonsList));
+    ui->comparisonsList->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    connect(ui->comparisonsList, &QTreeWidget::itemChanged, this, [this](QTreeWidgetItem *item,int column) {
+        const int index=ui->comparisonsList->indexOfTopLevelItem(item);
+        if (index<0 || index>=comparisons.size()) return;
+        if (column==0) {
+            const auto name=item->text(0).trimmed();
+            if (!name.isEmpty()) comparisons[index].name=name;
+            else {
+                const QSignalBlocker blocker(ui->comparisonsList);
+                item->setText(0,comparisons[index].name);
+            }
+            comparisons[index].visible=item->checkState(0)==Qt::Checked;
+            if (comparisons[index].trace) comparisons[index].trace->setVisible(comparisons[index].visible);
+        }
+    });
+    connect(ui->comparisonsList, &QTreeWidget::itemSelectionChanged,this,&ToneStackCalculator::updateComparisonButtons);
+    connect(ui->restoreComparison,&QPushButton::clicked,this,[this] {
+        restoreComparisonAt(ui->comparisonsList->indexOfTopLevelItem(ui->comparisonsList->currentItem()));
+    });
+    connect(ui->deleteComparison,&QPushButton::clicked,this,[this] {
+        deleteComparisonAt(ui->comparisonsList->indexOfTopLevelItem(ui->comparisonsList->currentItem()));
+    });
+    connect(ui->colourComparison,&QPushButton::clicked,this,[this] {
+        const int index=ui->comparisonsList->indexOfTopLevelItem(ui->comparisonsList->currentItem());
+        if(index<0 || index>=comparisons.size()) return;
+        const auto colour=QColorDialog::getColor(comparisons[index].colour,this,tr("Comparison colour"));
+        if(!colour.isValid()) return;
+        comparisons[index].colour=colour;
+        ui->comparisonsList->topLevelItem(index)->setForeground(0,colour);
+        QPixmap swatch(12,12); swatch.fill(colour); ui->comparisonsList->topLevelItem(index)->setIcon(0,QIcon(swatch));
+        redrawComparisons();
+    });
+    updateComparisonButtons();
 
     uiMap.pot1 = new Potentiometer(ui->pot1Position, ui->pot1Value, ui->pot1Type, ui->pot1Label, 1);
     uiMap.pot2 = new Potentiometer(ui->pot2Position, ui->pot2Value, ui->pot2Type, ui->pot2Label, 2);
@@ -158,11 +208,14 @@ void ToneStackCalculator::showRange(int r)
         range[i]->setVisible(i == r);
     }
 
-    currentRange = r;
+    currentRange = qBound(0,r,2);
+    if(plot && !currentResponse.isEmpty()) { delete plot; plot=drawTrace(currentResponse,plotColour); }
+    redrawComparisons();
 }
 
 void ToneStackCalculator::buildCircuitSelection()
 {
+    const QSignalBlocker blocker(ui->stackSelection);
     ui->stackSelection->clear();
 
     for (int i=0; i < circuits.count(); i++) {
@@ -178,19 +231,19 @@ void ToneStackCalculator::buildCircuitSelection()
     }
 
     ui->stackSelection->setCurrentIndex(0);
+    if (!circuits.isEmpty()) { setStack(0); createPlot(); }
 }
 
 void ToneStackCalculator::setStack(int stack)
 {
-    if (!waitSimulationEnd()) {
-        spice("bg_halt");
-        spice("reset");
-    }
-
-    //circuit->setCurrentCircuit(stack);
+    if (stack < 0 || stack >= circuits.size()) return;
+    const QSignalBlocker b1(ui->pot1Position), b2(ui->pot2Position), b3(ui->pot3Position);
+    const QSignalBlocker b4(ui->pot1Type), b5(ui->pot2Type), b6(ui->pot3Type);
     QJsonValue currentCircuit = circuits.at(stack);
     if (currentCircuit.isObject()) {
-        circuit->read(currentCircuit.toObject());
+        const auto object = currentCircuit.toObject();
+        settingsDialog.read(object.value("taperSettings").toObject());
+        circuit->read(object);
     }
 
     showRange(circuit->getRange());
@@ -199,93 +252,119 @@ void ToneStackCalculator::setStack(int stack)
     ui->actionSave->setEnabled(false);
 }
 
-bool ToneStackCalculator::waitSimulationEnd()
-{
-    bool completed = false;
-    for (int i=0;i < 20;i++) {
-#if defined(__MINGW32__) || defined(_MSC_VER)
-        Sleep (100);
-#else
-        usleep (100000);
-#endif
-        QApplication::processEvents(QEventLoop::AllEvents);
-
-        if (no_bg) {
-            completed = true;
-            break;
-        }
-    }
-
-    return (completed);
-}
-
 void ToneStackCalculator::createPlot()
 {
-    spice("bg_run");
-
-    if (!waitSimulationEnd()) {
-        // The simulation did not complete inside 2s
-        return;
-    }
-
-    pvector_info myvec = ngGet_Vec_Info(const_cast<char *>("V(3)"));
-    if (!myvec) {
-        return;
-    }
-
-    int veclength = myvec->v_length;
-
-     if (plot) {
-        scene.removeItem(plot);
-     }
-
-    QList<QGraphicsItem *> segments;
-
-    QPen plotPen;
-    plotPen.setColor(plotColour);
-
-    qreal offset = 10.0 * rangeStart[currentRange];
-    qreal interval = decade / 40;
-    qreal y = log10(magnitude(myvec->v_compdata[0]) + 1e-9) * -200 + offset;
-    if (y < 0) {
-        y = 0;
-    } else if (y > 400) {
-        y = 400;
-    }
-
-    for (int i=1;i < veclength; i++) {
-        qreal newy = log10(magnitude(myvec->v_compdata[i]) + 1e-9) * -200 + offset;
-        if (newy < 0) {
-            newy = 0;
-        }
-
-        if (newy < 400) {
-           segments.append(scene.addLine(interval * (i-1), y, interval * i, newy, plotPen));
-        }
-        y = newy;
-    }
-
-    plot = scene.createItemGroup(segments);
+    QJsonObject root;
+    circuit->write(root);
+    requestedConfiguration=root["circuits"].toArray().first().toObject();
+    requestedConfiguration["taperSettings"]=settingsDialog.write();
+    responseCurrent=false;
+    simulation.request();
 }
 
-char *ToneStackCalculator::toString(QString source)
+QGraphicsItemGroup *ToneStackCalculator::drawTrace(const QVector<double> &values,const QColor &colour)
 {
-    char text[64];
-
-    int i = 0;
-    for (i = 0; i < source.length(); i++) {
-        text[i] = source.at(i).toLatin1();
+    QList<QGraphicsItem*> segments;
+    QPen pen(colour);
+    const double offset=10.0*rangeStart[currentRange];
+    const double interval=decade/40.0;
+    for(int i=1;i<values.size();++i) {
+        const double y1=-200*log10(values[i-1]+1e-9)+offset;
+        const double y2=-200*log10(values[i]+1e-9)+offset;
+        const double dy=y2-y1;
+        double start=0,end=1;
+        if(std::abs(dy)<1e-12) {
+            if(y1<0 || y1>400) continue;
+        } else {
+            double a=(0-y1)/dy,b=(400-y1)/dy;
+            if(a>b) std::swap(a,b);
+            start=std::max(0.0,a); end=std::min(1.0,b);
+            if(start>end) continue;
+        }
+        segments.append(scene.addLine(interval*(i-1+start),y1+start*dy,
+                                      interval*(i-1+end),y1+end*dy,pen));
     }
-    text[i] = 0;
-
-    fprintf(stderr, "Value = %s\n", text);
-
-    return _strdup(text);
+    return scene.createItemGroup(segments);
 }
-
+void ToneStackCalculator::renderPlot(const QVector<double> &magnitudes)
+{
+    if(magnitudes.size()<2) return;
+    statusBar()->clearMessage();
+    currentResponse=magnitudes;
+    responseConfiguration=requestedConfiguration;
+    responseCurrent=true;
+    ui->pushButton->setEnabled(comparisons.size()<256);
+    delete plot;
+    plot=drawTrace(currentResponse,plotColour);
+}
+void ToneStackCalculator::redrawComparisons()
+{
+    for(auto &comparison:comparisons) {
+        delete comparison.trace;
+        comparison.trace=drawTrace(comparison.magnitudes,comparison.colour);
+        comparison.trace->setVisible(comparison.visible);
+    }
+}
+bool ToneStackCalculator::addComparison(const QString &name)
+{
+    if(!responseCurrent || currentResponse.size()<2 || name.trimmed().isEmpty() || comparisons.size()>=256) return false;
+    Comparison comparison;
+    comparison.name=name.trimmed();
+    comparison.colour=plotColour;
+    comparison.configuration=responseConfiguration;
+    comparison.magnitudes=currentResponse;
+    comparisons.append(comparison);
+    const QSignalBlocker blocker(ui->comparisonsList);
+    auto item=new QTreeWidgetItem(ui->comparisonsList);
+    item->setFlags(item->flags()|Qt::ItemIsEditable|Qt::ItemIsUserCheckable);
+    item->setText(0,comparison.name);
+    item->setText(1,comparison.configuration["circuitname"].toString());
+    const int captured=qBound(0,comparison.configuration["range"].toInt(),2);
+    item->setText(2,QString("%1 to %2 dB").arg(rangeStart[captured]).arg(rangeStart[captured]-40));
+    item->setCheckState(0,Qt::Checked);
+    item->setForeground(0,comparison.colour);
+    QPixmap swatch(12,12); swatch.fill(comparison.colour); item->setIcon(0,QIcon(swatch));
+    item->setToolTip(0,tr("Restore settings to edit the circuit that produced this curve."));
+    ui->comparisonsList->setCurrentItem(item);
+    comparisons.last().trace=drawTrace(comparison.magnitudes,comparison.colour);
+    ui->comparisonsDock->show();
+    ui->pushButton->setEnabled(comparisons.size()<256);
+    updateComparisonButtons();
+    return true;
+}
+void ToneStackCalculator::restoreComparisonAt(int index)
+{
+    if(index<0 || index>=comparisons.size()) return;
+    const auto comparison=comparisons[index];
+    // Append a separate editable entry; do not overwrite a catalogue default.
+    auto object=comparison.configuration;
+    const QSignalBlocker blocker(ui->stackSelection);
+    circuits.append(object);
+    ui->stackSelection->addItem(object["circuitname"].toString());
+    ui->stackSelection->setCurrentIndex(circuits.size()-1);
+    setStack(circuits.size()-1);
+    plotColour=comparison.colour;
+    createPlot();
+}
+void ToneStackCalculator::deleteComparisonAt(int index)
+{
+    if(index<0 || index>=comparisons.size()) return;
+    delete comparisons[index].trace;
+    comparisons.removeAt(index);
+    delete ui->comparisonsList->takeTopLevelItem(index);
+    ui->pushButton->setEnabled(responseCurrent && comparisons.size()<256);
+    updateComparisonButtons();
+}
+void ToneStackCalculator::updateComparisonButtons()
+{
+    const bool selected=ui->comparisonsList->currentItem()!=nullptr;
+    ui->restoreComparison->setEnabled(selected);
+    ui->colourComparison->setEnabled(selected);
+    ui->deleteComparison->setEnabled(selected);
+}
 void ToneStackCalculator::readConfig(QString filename)
 {
-    QFile configFile(tr("../circuits/").append(filename));
+    QFile configFile(QDir(AssetPaths::circuitsDirectory()).filePath(filename));
 
     if (!configFile.open(QIODevice::ReadOnly)) {
         qWarning("Couldn't open config file.");
@@ -298,134 +377,13 @@ void ToneStackCalculator::readConfig(QString filename)
             QJsonObject config = configDoc.object();
 
             if (config.contains("circuits") && config["circuits"].isArray()) {
-                circuits = config["circuits"].toArray();
+                circuits = {};
+                for (const auto &entry : config["circuits"].toArray())
+                    if (entry.isObject())
+                        circuits.append(AssetPaths::resolved(entry.toObject(), QFileInfo(configFile).absolutePath()));
             }
         }
     }
-}
-
-/* Callback function called from bg thread in ngspice to transfer
-any string created by printf or puts. Output to stdout in ngspice is
-preceded by token stdout, same with stderr.*/
-int ng_getchar(char* outputreturn, int ident, void* userdata)
-{
-    printf("%s\n", outputreturn);
-    /* setting a flag if an error message occurred */
-    if (ciprefix("stderr Error:", outputreturn))
-        errorflag = true;
-    return 0;
-}
-
-
-int ng_getstat(char* outputreturn, int ident, void* userdata)
-{
-    printf("%s\n", outputreturn);
-    return 0;
-}
-
-int ng_thread_runs(bool noruns, int ident, void* userdata)
-{
-    no_bg = noruns;
-    if (noruns)
-        printf("bg not running\n");
-    else
-        printf("bg running\n");
-
-    return 0;
-}
-
-/* Callback function called from bg thread in ngspice once per accepted data point */
-int ng_data(pvecvaluesall vdata, int numvecs, int ident, void* userdata)
-{
-    int* ret;
-
-    v2dat = vdata->vecsa[vecgetnumber]->creal;
-    if (!has_break && (v2dat > 0.5)) {
-        //        printf("Data V(2) value: %f\n", v2dat);
-            /* using signal SIGTERM by sending to main thread, alterp() then is run from the main thread,
-              (not on Windows though!)  */
-#ifndef _MSC_VER
-        if (testnumber == 4)
-            pthread_kill(mainthread, SIGTERM);
-#endif
-        has_break = true;
-        printf("Pause requested, setpoint reached\n");
-        /* leave bg thread for a while to allow halting it from main */
-#if defined(__MINGW32__) || defined(_MSC_VER)
-        Sleep(100);
-#else
-        usleep(100000);
-#endif
-        //        ret = ((int * (*)(char*)) ngSpice_Command_handle)("bg_halt");
-    }
-    return 0;
-}
-
-
-/* Callback function called from bg thread in ngspice once upon intialization
-   of the simulation vectors)*/
-int ng_initdata(pvecinfoall intdata, int ident, void* userdata)
-{
-    int i;
-    int vn = intdata->veccount;
-    for (i = 0; i < vn; i++) {
-        printf("Vector: %s\n", intdata->vecs[i]->vecname);
-        /* find the location of V(2) */
-        if (cieq(intdata->vecs[i]->vecname, const_cast <char*>("V(2)")))
-            vecgetnumber = i;
-    }
-    return 0;
-}
-
-
-/* Callback function called from bg thread in ngspice if fcn controlled_exit()
-   is hit. Do not exit, but unload ngspice. */
-int ng_exit(int exitstatus, bool immediate, bool quitexit, int ident, void* userdata)
-{
-    if (quitexit) {
-        printf("DNote: Returned form quit with exit status %d\n", exitstatus);
-        exit(exitstatus);
-    }
-
-    if (immediate) {
-        printf("DNote: Unloading ngspice inmmediately is not possible\n");
-        printf("DNote: Can we recover?\n");
-    } else {
-        printf("DNote: Unloading ngspice is not possible\n");
-        printf("DNote: Can we recover? Send 'quit' command to ngspice.\n");
-        errorflag = true;
-        ngSpice_Command(const_cast <char*>("quit 5"));
-        //        raise(SIGINT);
-    }
-
-    return exitstatus;
-}
-
-/* Case insensitive str eq.
-   Like strcasecmp( ) XXX */
-int cieq(char* p, char* s)
-{
-    while (*p) {
-        if ((isupper(*p) ? tolower(*p) : *p) !=
-            (isupper(*s) ? tolower(*s) : *s))
-            return(false);
-        p++;
-        s++;
-    }
-    return (*s ? false : true);
-}
-
-/* Case insensitive prefix. */
-int ciprefix(const char* p, const char* s)
-{
-    while (*p) {
-        if ((isupper(*p) ? tolower(*p) : *p) !=
-            (isupper(*s) ? tolower(*s) : *s))
-            return(false);
-        p++;
-        s++;
-    }
-    return (true);
 }
 
 void ToneStackCalculator::on_actionAbout_triggered()
@@ -494,262 +452,268 @@ void ToneStackCalculator::on_pot3Type_currentIndexChanged(int index)
 
 void ToneStackCalculator::on_pot1Value_editingFinished()
 {
-    uiMap.pot1->setTextValue(toString(ui->pot1Value->text()));
+    uiMap.pot1->setTextValue(ui->pot1Value->text().toLatin1().constData());
 
     createPlot();
 }
 
 void ToneStackCalculator::on_pot2Value_editingFinished()
 {
-    uiMap.pot2->setTextValue(toString(ui->pot2Value->text()));
+    uiMap.pot2->setTextValue(ui->pot2Value->text().toLatin1().constData());
 
     createPlot();
 }
 
 void ToneStackCalculator::on_pot3Value_editingFinished()
 {
-    uiMap.pot3->setTextValue(toString(ui->pot3Value->text()));
+    uiMap.pot3->setTextValue(ui->pot3Value->text().toLatin1().constData());
 
     createPlot();
 }
 
 void ToneStackCalculator::on_r1Value_editingFinished()
 {
-    uiMap.resistors[0]->setTextValue(toString(ui->r1Value->text()));
+    uiMap.resistors[0]->setTextValue(ui->r1Value->text().toLatin1().constData());
 
     createPlot();
 }
 
 void ToneStackCalculator::on_r2Value_editingFinished()
 {
-    uiMap.resistors[1]->setTextValue(toString(ui->r2Value->text()));
+    uiMap.resistors[1]->setTextValue(ui->r2Value->text().toLatin1().constData());
 
     createPlot();
 }
 
 void ToneStackCalculator::on_r3Value_editingFinished()
 {
-    uiMap.resistors[2]->setTextValue(toString(ui->r3Value->text()));
+    uiMap.resistors[2]->setTextValue(ui->r3Value->text().toLatin1().constData());
 
     createPlot();
 }
 
 void ToneStackCalculator::on_r4Value_editingFinished()
 {
-    uiMap.resistors[3]->setTextValue(toString(ui->r4Value->text()));
+    uiMap.resistors[3]->setTextValue(ui->r4Value->text().toLatin1().constData());
 
     createPlot();
 }
 
 void ToneStackCalculator::on_r5Value_editingFinished()
 {
-    uiMap.resistors[4]->setTextValue(toString(ui->r5Value->text()));
+    uiMap.resistors[4]->setTextValue(ui->r5Value->text().toLatin1().constData());
 
     createPlot();
 }
 
 void ToneStackCalculator::on_c1Value_editingFinished()
 {
-    uiMap.capacitors[0]->setTextValue(toString(ui->c1Value->text()));
+    uiMap.capacitors[0]->setTextValue(ui->c1Value->text().toLatin1().constData());
 
     createPlot();
 }
 
 void ToneStackCalculator::on_c2Value_editingFinished()
 {
-    uiMap.capacitors[1]->setTextValue(toString(ui->c2Value->text()));
+    uiMap.capacitors[1]->setTextValue(ui->c2Value->text().toLatin1().constData());
 
     createPlot();
 }
 
 void ToneStackCalculator::on_c3Value_editingFinished()
 {
-    uiMap.capacitors[2]->setTextValue(toString(ui->c3Value->text()));
+    uiMap.capacitors[2]->setTextValue(ui->c3Value->text().toLatin1().constData());
 
     createPlot();
 }
 
 void ToneStackCalculator::on_c4Value_editingFinished()
 {
-    uiMap.capacitors[3]->setTextValue(toString(ui->c4Value->text()));
+    uiMap.capacitors[3]->setTextValue(ui->c4Value->text().toLatin1().constData());
 
     createPlot();
 }
 
 void ToneStackCalculator::on_c5Value_editingFinished()
 {
-    uiMap.capacitors[4]->setTextValue(toString(ui->c5Value->text()));
+    uiMap.capacitors[4]->setTextValue(ui->c5Value->text().toLatin1().constData());
 
     createPlot();
 }
 
 void ToneStackCalculator::on_l1Value_editingFinished()
 {
-    uiMap.inductors[0]->setTextValue(toString(ui->l1Value->text()));
+    uiMap.inductors[0]->setTextValue(ui->l1Value->text().toLatin1().constData());
 
     createPlot();
 }
 
 void ToneStackCalculator::on_l2Value_editingFinished()
 {
-    uiMap.inductors[1]->setTextValue(toString(ui->l2Value->text()));
+    uiMap.inductors[1]->setTextValue(ui->l2Value->text().toLatin1().constData());
 
     createPlot();
 }
 
 void ToneStackCalculator::on_l3Value_editingFinished()
 {
-    uiMap.inductors[2]->setTextValue(toString(ui->l3Value->text()));
+    uiMap.inductors[2]->setTextValue(ui->l3Value->text().toLatin1().constData());
 
     createPlot();
 }
 
 void ToneStackCalculator::on_l4Value_editingFinished()
 {
-    uiMap.inductors[3]->setTextValue(toString(ui->l4Value->text()));
+    uiMap.inductors[3]->setTextValue(ui->l4Value->text().toLatin1().constData());
 
     createPlot();
 }
 
 void ToneStackCalculator::on_l5Value_editingFinished()
 {
-    uiMap.inductors[4]->setTextValue(toString(ui->l5Value->text()));
+    uiMap.inductors[4]->setTextValue(ui->l5Value->text().toLatin1().constData());
 
     createPlot();
 }
 
 void ToneStackCalculator::on_rSValue_editingFinished()
 {
-    uiMap.rS->setTextValue(toString(ui->rSValue->text()));
+    uiMap.rS->setTextValue(ui->rSValue->text().toLatin1().constData());
 
     createPlot();
 }
 
 void ToneStackCalculator::on_rLValue_editingFinished()
 {
-    uiMap.rL->setTextValue(toString(ui->rLValue->text()));
+    uiMap.rL->setTextValue(ui->rLValue->text().toLatin1().constData());
 
+    createPlot();
+}
+
+void ToneStackCalculator::on_centrePotsButton_clicked()
+{
+    QJsonObject root;
+    circuit->write(root);
+    const auto configuration=root["circuits"].toArray().first().toObject();
+    const QSignalBlocker b1(ui->pot1Position),b2(ui->pot2Position),b3(ui->pot3Position);
+    Potentiometer *pots[]={uiMap.pot1,uiMap.pot2,uiMap.pot3};
+    for(int i=0;i<3;++i)
+        if(configuration.contains(QString("pot%1").arg(i+1)))
+            pots[i]->setPosition(POT_MAX/2);
     createPlot();
 }
 
 void ToneStackCalculator::on_resetButton_clicked()
 {
+    const QString savedFilename = filename;
     setStack(currentStack);
-
+    filename = savedFilename;
+    ui->actionSave->setEnabled(!filename.isEmpty());
     createPlot();
 }
 
 void ToneStackCalculator::on_actionOpen_triggered()
 {
-    filename = QFileDialog::getOpenFileName(this, tr("Open a saved circuit"), QDir::homePath(), tr("Tone Stack files (*.tsc);;All Files (*)"));
-
-    if (!filename.isEmpty()) {
-        ui->actionSave->setEnabled(true);
-
-        QFile loadFile(filename);
-
-        if (!loadFile.open(QIODevice::ReadOnly)) {
-            qWarning("Couldn't open load file.");
-        } else {
-            QByteArray saveData = loadFile.readAll();
-
-            QJsonDocument loadDoc(QJsonDocument::fromJson(saveData));
-
-            int currentCount = circuits.count();
-
-            if (loadDoc.isObject()) {
-                QJsonObject config = loadDoc.object();
-
-                if (config.contains("circuits") && config["circuits"].isArray()) {
-                    QJsonArray circuitArray = config["circuits"].toArray();
-                    for (int i=0; i < circuitArray.count(); i++) {
-                        QJsonValue currentCircuit = circuitArray.at(i);
-                        if (currentCircuit.isObject()) {
-                            QJsonObject circuitObject = currentCircuit.toObject();
-                            circuits.append(circuitObject);
-                            if (circuitObject.contains("circuitname") && circuitObject["circuitname"].isString()) {
-                                ui->stackSelection->addItem(circuitObject["circuitname"].toString());
-                            } else {
-                                ui->stackSelection->addItem("<Undefined>");
-                            }
-                        }
-                    }
-
-                    if (circuitArray.count() > 0) {
-                        ui->stackSelection->setCurrentIndex(currentCount);
-                        setStack(currentCount);
-                    }
-                }
-            }
-        }
+    const QString path = QFileDialog::getOpenFileName(this, tr("Open a saved circuit"), QDir::homePath(), tr("Tone Stack files (*.tsc);;All Files (*)"));
+    if (path.isEmpty())
+        return;
+    QFile file(path);
+    if (!file.open(QIODevice::ReadOnly)) {
+        QMessageBox::warning(this, tr("Open circuit"), file.errorString());
+        return;
     }
-
+    QJsonParseError error;
+    const auto document = QJsonDocument::fromJson(file.readAll(), &error);
+    const auto entries = document.object().value("circuits").toArray();
+    if (error.error != QJsonParseError::NoError || entries.isEmpty()) {
+        QMessageBox::warning(this, tr("Open circuit"), tr("The file does not contain a circuit catalogue."));
+        return;
+    }
+    const int first = circuits.count();
+    {
+        const QSignalBlocker blocker(ui->stackSelection);
+        for (const auto &entry : entries) {
+            if (!entry.isObject())
+                continue;
+            const auto object = AssetPaths::resolved(entry.toObject(), QFileInfo(path).absolutePath());
+            circuits.append(object);
+            ui->stackSelection->addItem(object.value("circuitname").toString("<Undefined>"));
+        }
+        if (circuits.count() == first)
+            return;
+        ui->stackSelection->setCurrentIndex(first);
+    }
+    setStack(first);
+    filename = path;
+    ui->actionSave->setEnabled(true);
     createPlot();
+}
+
+bool ToneStackCalculator::saveToFile(const QString &path)
+{
+    QJsonObject root;
+    circuit->write(root);
+    auto entries = root.value("circuits").toArray();
+    auto object = entries.at(0).toObject();
+    object["taperSettings"] = settingsDialog.write();
+    entries[0] = AssetPaths::forSave(object, QFileInfo(path).absolutePath());
+    root["circuits"] = entries;
+    root["formatVersion"] = 2;
+    QSaveFile file(path);
+    const auto data = QJsonDocument(root).toJson();
+    if (!file.open(QIODevice::WriteOnly) || file.write(data) != data.size() || !file.commit()) {
+        QMessageBox::warning(this, tr("Save circuit"), file.errorString());
+        return false;
+    }
+    circuits[currentStack] = object;
+    ui->stackSelection->setItemText(currentStack, circuit->getCircuitName());
+    return true;
 }
 
 void ToneStackCalculator::on_actionSave_triggered()
 {
-    if (!filename.isEmpty()) {
-        QFile saveFile(filename);
-
-        if (!saveFile.open(QIODevice::WriteOnly)) {
-            qWarning("Couldn't open save file.");
-        } else {
-            QJsonObject circuitObject;
-            circuit->write(circuitObject);
-            saveFile.write(QJsonDocument(circuitObject).toJson());
-        }
-    }
+    if (!filename.isEmpty())
+        saveToFile(filename);
 }
 
 void ToneStackCalculator::on_actionSave_As_triggered()
 {
     NameDialog dialog;
-
-    if (dialog.exec() == 1) {
-        filename = QFileDialog::getSaveFileName(this, tr("Save the current circuit values"), QDir::homePath(), tr("Tone Stack files (*.tsc);;All Files (*)"));
-
-        if (!filename.isEmpty()) {
-            circuit->setCircuitName(dialog.getName());
-            circuit->saveCircuit(filename);
-        }
+    if (dialog.exec() != QDialog::Accepted)
+        return;
+    const QString path = QFileDialog::getSaveFileName(this, tr("Save the current circuit values"), QDir::homePath(), tr("Tone Stack files (*.tsc);;All Files (*)"));
+    if (path.isEmpty())
+        return;
+    const QString previousName = circuit->getCircuitName();
+    circuit->setCircuitName(dialog.getName());
+    if (saveToFile(path)) {
+        filename = path;
+        ui->actionSave->setEnabled(true);
+    } else {
+        circuit->setCircuitName(previousName);
     }
 }
-
-
 void ToneStackCalculator::on_pushButton_clicked()
 {
-    // Snapshot
-    if (plot && savedPlots <= 256) {
-        savedPlot[savedPlots++] = plot;
-        plot = nullptr;
-    }
+    if(!responseCurrent) return;
+    bool ok=false;
+    const auto name=QInputDialog::getText(this,tr("Add comparison"),tr("Name:"),QLineEdit::Normal,
+        tr("%1 — %2").arg(circuit->getCircuitName()).arg(comparisons.size()+1),&ok);
+    if(ok) addComparison(name);
 }
-
 void ToneStackCalculator::on_pushButton_2_clicked()
 {
-    // Colour
-    QColor newColour = QColorDialog::getColor(plotColour, this, tr("Select plot colour..."));
-
-    if (newColour.isValid()) {
-        plotColour = newColour;
-
-        createPlot();
+    const auto colour=QColorDialog::getColor(plotColour,this,tr("Select plot colour..."));
+    if(!colour.isValid()) return;
+    plotColour=colour;
+    if(!currentResponse.isEmpty()) {
+        delete plot; plot=drawTrace(currentResponse,plotColour);
     }
 }
-
 void ToneStackCalculator::on_pushButton_3_clicked()
 {
-    // Clear
-    for (int i = 0; i < savedPlots; i++) {
-        scene.removeItem(savedPlot[i]);
-    }
-
-    savedPlots = 0;
-
-    createPlot();
+    while(!comparisons.isEmpty()) deleteComparisonAt(comparisons.size()-1);
 }
-
 void ToneStackCalculator::on_actionPrint_triggered()
 {
     QPrinter printer;
@@ -802,14 +766,21 @@ void ToneStackCalculator::on_actionActive_Circuits_Mode_triggered()
 
 void ToneStackCalculator::on_actionSettings_triggered()
 {
-    if (settingsDialog.exec() == 1) {
-        uiMap.pot1->setTextValue(toString(ui->pot1Value->text()));
-        uiMap.pot2->setTextValue(toString(ui->pot2Value->text()));
-        uiMap.pot3->setTextValue(toString(ui->pot3Value->text()));
+    const auto previous=settingsDialog.write();
+    if(settingsDialog.exec()==QDialog::Accepted) {
+        // Apply the new taper to every pot without reparsing rounded UI text.
+        QJsonObject root;
+        circuit->write(root);
+        const auto configuration=root["circuits"].toArray().first().toObject();
+        Potentiometer *pots[]={uiMap.pot1,uiMap.pot2,uiMap.pot3};
+        for(int i=0;i<3;++i)
+            if(configuration.contains(QString("pot%1").arg(i+1)))
+                pots[i]->setPosition(pots[i]->getPosition());
         createPlot();
+    } else {
+        settingsDialog.read(previous);
     }
 }
-
 void ToneStackCalculator::on_actionTonestack_Help_triggered()
 {
     helpBrowser.show();

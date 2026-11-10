@@ -1,0 +1,90 @@
+\documentclass[border=10pt]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{circuitikz}
+
+\begin{document}
+\begin{circuitikz}[european, scale=0.9, font=\small]
+
+% Source
+\draw (0, 0) to[sV, l=$V_{\mathrm{IN}}$] (0, -4) node[ground]{};
+\draw (0, 0) to[R, l={RS $47\,\Omega$}] (2, 0);
+\node[circ] at (2, 0) {};
+
+% Node 2 branches up to bass row and down to treble row
+\draw (2, 0) -- (2,  3);
+\draw (2, 0) -- (2, -3);
+
+% === BASS network (y = 3) ===
+
+% R1: node 2 to node 10
+\draw (2, 3) to[R, l={R1 $22\,\mathrm{k}\Omega$}] (4.5, 3);
+\node[circ] at (4.5, 3) {};
+
+% C1: node 10 to node 12, bridging the pot (routed above at y = 4.5)
+\draw (4.5, 3) -- (4.5, 4.5)
+    to[C, l={C1 47nF}]
+    (9.5, 4.5) -- (9.5, 3);
+
+% Bass pot: RP1 100k total. Left end (CW) = RP1HI side. mirror puts wiper below.
+\draw (4.5, 3) to[pR, mirror, l={POT1 $100\,\mathrm{k}\Omega$}, n=pot1] (9.5, 3);
+\node[circ] at (9.5, 3) {};
+% Straight arrow inside pot body: CCW end (right) → CW end (left)
+\draw[-latex, thin] (7.25, 3) -- (6.75, 3);
+\node[right, font=\bfseries\small] at (pot1.wiper) {Bass};
+
+% R2: wiper to node 50
+\draw (pot1.wiper) to[R, l_={\shortstack[l]{R2\\$22\,\mathrm{k}\Omega$}}] (7, 0.5);
+
+% R3: node 12 to output bus
+\draw (9.5, 3) to[R, l={R3 $22\,\mathrm{k}\Omega$}] (14, 3);
+
+% === TREBLE network (y = -3) ===
+
+% R4: node 2 to node 30
+\draw (2, -3) to[R, l={R4 $10\,\mathrm{k}\Omega$}] (4.5, -3);
+
+% Treble pot: RP3 100k total. Left end (CW) = RP3HI side. Default puts wiper above.
+\draw (4.5, -3) to[pR, l_={POT3 $100\,\mathrm{k}\Omega$}, n=pot3] (9.5, -3);
+% Straight arrow inside pot body: CCW end (right) → CW end (left)
+\draw[-latex, thin] (7.25, -3) -- (6.75, -3);
+\node[right, font=\bfseries\small] at (pot3.wiper) {Treble};
+
+% C2: wiper to node 50
+\draw (pot3.wiper) to[C, l={\shortstack[l]{C2\\470pF}}] (7, -0.5);
+
+% R5: node 32 to output bus
+\draw (9.5, -3) to[R, l={R5 $10\,\mathrm{k}\Omega$}] (14, -3);
+
+% === Summing junction (node 50) ===
+% Join R2 bottom (7, 0.5) and C2 top (7, -0.5) at node 50 (7, 0)
+\draw (7, 0.5) -- (7, 0) -- (7, -0.5);
+\node[circ] at (7, 0) {};
+
+% === Op-amp ===
+% Output anchored at (13, 0)
+\node[op amp, anchor=out] (opamp) at (13, 0) {};
+
+% Node 50 to inverting input: horizontal then vertical
+\draw (7, 0) -| (opamp.-);
+
+% Non-inverting input to GND (short stub)
+\draw (opamp.+) -- ++(0, -0.5) node[ground]{};
+
+% === Output bus (node 3, x = 14) ===
+% Short wire from op-amp output to the bus
+\draw (opamp.out) -- (14, 0);
+
+% Vertical bus connecting R3 (top), op-amp output (mid) and R5 (bottom)
+\draw (14, 3) -- (14, -3);
+\node[circ] at (14,  0) {};
+\node[circ] at (14, -3) {};
+
+% R99 load: node 3 to GND
+\draw (14, -3) to[R, l_={\shortstack[l]{RL\\$10\,\mathrm{k}\Omega$}}] (14, -5.5) node[ground]{};
+
+% Output terminal
+\draw (14, 0) to[short, -o] (15.5, 0) node[right] {Out};
+
+\end{circuitikz}
+\end{document}

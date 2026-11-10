@@ -112,11 +112,11 @@
             "image": "../circuits/active/secretfreq.png",
             "rS": {
                 "id": 98,
-                "value": 820
+                "value": 1
             },
             "rL": {
                 "id": 99,
-                "value": 10000
+                "value": 100000
             },
             "pot2": {
                 "function": "Frequency",
@@ -166,6 +166,244 @@
                 {
                     "id": 5,
                     "value": 10000
+                }
+            ],
+            "inductors": [
+            ]
+        },
+        {
+            "circuitname": "Baxandall 2 Band EQ",
+			"range": 1,
+            "command": "source ../circuits/active/baxandall2.cir",
+            "image": "../circuits/active/secretfreq.png",
+            "rS": {
+                "id": 98,
+                "value": 1
+            },
+            "rL": {
+                "id": 99,
+                "value": 100000
+            },
+            "pot1": {
+                "function": "Bass",
+                "id": 1,
+                "type": 0,
+                "value": 100000
+            },
+            "pot3": {
+                "function": "Treble",
+                "id": 3,
+                "type": 0,
+                "value": 100000
+            },
+            "resistors": [
+                {
+                    "id": 1,
+                    "value": 22000
+                },
+                {
+                    "id": 2,
+                    "value": 22000
+                },
+                {
+                    "id": 3,
+                    "value": 22000
+                },
+                {
+                    "id": 4,
+                    "value": 15000
+                },
+                {
+                    "id": 5,
+                    "value": 15000
+                }
+            ],
+            "capacitors": [
+                {
+                    "id": 1,
+                    "value": 47000
+                },
+				{
+                    "id": 2,
+                    "value": 4700
+                }
+            ],
+            "inductors": [
+            ]
+        },
+        {
+            "circuitname": "Baxandall 3 Band EQ",
+			"range": 1,
+            "command": "source ../circuits/active/baxandall3.cir",
+            "image": "../circuits/active/secretfreq.png",
+            "rS": {
+                "id": 98,
+                "value": 1
+            },
+            "rL": {
+                "id": 99,
+                "value": 100000
+            },
+            "pot1": {
+                "function": "Bass",
+                "id": 1,
+                "type": 0,
+                "value": 100000
+            },
+            "pot2": {
+                "function": "Mid",
+                "id": 2,
+                "type": 0,
+                "value": 100000
+            },
+            "pot3": {
+                "function": "Treble",
+                "id": 3,
+                "type": 0,
+                "value": 100000
+            },
+            "resistors": [
+                {
+                    "id": 1,
+                    "value": 22000
+                },
+                {
+                    "id": 2,
+                    "value": 22000
+                },
+                {
+                    "id": 3,
+                    "value": 22000
+                },
+                {
+                    "id": 4,
+                    "value": 3600
+                },
+                {
+                    "id": 5,
+                    "value": 3600
+                },
+                {
+                    "id": 6,
+                    "value": 10000
+                },
+                {
+                    "id": 7,
+                    "value": 10000
+                }
+            ],
+            "capacitors": [
+                {
+                    "id": 1,
+                    "value": 47000
+                },
+				{
+                    "id": 2,
+                    "value": 22000
+                },
+				{
+                    "id": 3,
+                    "value": 4700
+                },
+				{
+                    "id": 4,
+                    "value": 470
+                }
+            ],
+            "inductors": [
+            ]
+        },
+        {
+            "circuitname": "Spark Gap Gain",
+			"range": 2,
+            "command": "source ../circuits/active/sparkgapgain.cir",
+            "image": "../circuits/active/secretfreq.png",
+            "rS": {
+                "id": 98,
+                "value": 100
+            },
+            "rL": {
+                "id": 99,
+                "value": 100000
+            },
+            "pot1": {
+                "function": "Gain",
+                "id": 1,
+                "type": 0,
+                "value": 10000
+            },
+            "resistors": [
+                {
+                    "id": 1,
+                    "value": 2200
+                },
+                {
+                    "id": 2,
+                    "value": 100
+                }
+            ],
+            "capacitors": [
+                {
+                    "id": 1,
+                    "value": 2200
+                },
+				{
+                    "id": 2,
+                    "value": 10000000
+                }
+            ],
+            "inductors": [
+            ]
+        },
+        {
+            "circuitname": "Spark Gap Tone",
+			"range": 1,
+            "command": "source ../circuits/active/sparkgaptone.cir",
+            "image": "../circuits/active/secretfreq.png",
+            "rS": {
+                "id": 98,
+                "value": 100
+            },
+            "rL": {
+                "id": 99,
+                "value": 100000
+            },
+            "pot1": {
+                "function": "Tone",
+                "id": 1,
+                "type": 0,
+                "value": 10000
+            },
+            "resistors": [
+                {
+                    "id": 1,
+                    "value": 47000
+                },
+                {
+                    "id": 2,
+                    "value": 1000
+                },
+                {
+                    "id": 3,
+                    "value": 1000
+                }
+            ],
+            "capacitors": [
+                {
+                    "id": 1,
+                    "value": 4700
+                },
+				{
+                    "id": 2,
+                    "value": 100000
+                },
+				{
+                    "id": 3,
+                    "value": 100000
+                },
+				{
+                    "id": 4,
+                    "value": 33000
                 }
             ],
             "inductors": [

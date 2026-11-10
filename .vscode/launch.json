@@ -1,0 +1,31 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch tonestack (MSVC Debug)",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "D:/Perspective/Software/tonestack/build/Debug/tonestack.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "D:/Perspective/Software/tonestack/build",
+            "environment": [
+                { "name": "PATH", "value": "D:/Qt/6.11.1/msvc2022_64/bin;${env:PATH}" }
+            ],
+            "console": "internalConsole"
+        },
+        {
+            "name": "Launch tonestack (MSVC Release)",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "D:/Perspective/Software/tonestack/build/Release/tonestack.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "D:/Perspective/Software/tonestack/build",
+            "environment": [
+                { "name": "PATH", "value": "D:/Qt/6.11.1/msvc2022_64/bin;${env:PATH}" }
+            ],
+            "console": "internalConsole"
+        }
+    ]
+}

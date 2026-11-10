@@ -1,0 +1,53 @@
+﻿\documentclass[border=10pt]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{circuitikz}
+
+\begin{document}
+\begin{circuitikz}[european, scale=0.9, font=\small]
+
+% === Source ===
+\draw (0, 0.545) to[sV, l=$V_{\mathrm{IN}}$] (0, -4) node[ground]{};
+\draw (0, 0.545) to[R, l={RS $100\,\Omega$}] (2, 0.545);
+
+% === Op-amp: yscale=-1 so (+)=upper-left (signal in), (-)=lower-left (feedback) ===
+\node[op amp, yscale=-1, anchor=out] (opamp) at (10, 0) {};
+\draw (2, 0.545) -| (opamp.+);
+
+% === Inverting input wire: left of op-amp body, then down-right to hub ===
+\draw (opamp.-) -- (7.35, -0.545) -- (7.35, -3) -- (11, -3);
+
+% === Output bus (node 3): opamp.out -> C1 tap -> pot CCW -> RL/Out ===
+\draw (opamp.out) -- (15, 0);
+\node[circ] at (11, 0) {};       % T-junction: C1 top
+\node[circ] at (13, 0) {};       % T-junction: pot CCW
+\node[circ] at (15, 0) {};       % T-junction: RL, Out
+\draw (15, 0) to[R, l={\shortstack[l]{RL\\$100\,\mathrm{k}\Omega$}}] (15, -3.5) node[ground]{};
+\draw (15, 0) to[short, -o] (16.5, 0) node[right]{Out};
+
+% === POT1: vertical, CCW(node 3)=top, CW(node 11)=bottom, wiper exits left ===
+\draw (13, 0) to[pR, mirror, l={\shortstack[l]{POT1\\$100\,\mathrm{k}\Omega$}}, n=pot1] (13, -6);
+% CW indicator: arrow pointing down toward CW end
+\draw[-latex, thin] (13, -2.75) -- (13, -3.25);
+\node[above, xshift=-0.25cm, font=\bfseries\small] at (pot1.wiper) {Gain};
+\node[circ] at (13, -6) {};      % T-junction: pot CW, R1 wire, R2
+
+% === Node 10 hub at (11, -3): wiper, opamp.-, C1 bottom, R1 top ===
+\draw (pot1.wiper) -- (11, -3);
+\node[circ] at (11, -3) {};      % 4-way junction
+
+% === C1 vertical: parallel with RP1LO (node 3 to node 10) ===
+\draw (11, 0) to[C, l={\shortstack[l]{C1\\$2.2\,\mathrm{nF}$}}] (11, -3);
+
+% === R1 vertical: parallel with RP1HI (node 10 to node 11) ===
+\draw (11, -3) to[R, l={\shortstack[l]{R1\\$2.2\,\mathrm{k}\Omega$}}] (11, -6);
+
+% Wire: R1 bottom to pot CW end
+\draw (11, -6) -- (13, -6);
+
+% === R2 and C2: frequency shaping at CW end ===
+\draw (13, -6) to[R, l={\shortstack[l]{R2\\$100\,\Omega$}}] (13, -8.5);
+\draw (13, -8.5) to[C, l={\shortstack[l]{C2\\$10\,\mu\mathrm{F}$}}] (13, -10.5) node[ground]{};
+
+\end{circuitikz}
+\end{document}

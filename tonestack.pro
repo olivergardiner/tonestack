@@ -15,6 +15,7 @@ SOURCES += \
     helpbrowser.cpp \
     helptextviewer.cpp \
     inductor.cpp \
+    simulationcontroller.cpp \
     main.cpp \
     namedialog.cpp \
     potentiometer.cpp \
@@ -24,6 +25,9 @@ SOURCES += \
 
 HEADERS += \
     capacitor.h \
+    spiceinput.h \
+    assetpaths.h \
+    simulationcontroller.h \
     circuit.h \
     circuitelement.h \
     helpbrowser.h \

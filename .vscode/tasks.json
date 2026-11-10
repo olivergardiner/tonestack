@@ -1,0 +1,84 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build Debug",
+      "type": "shell",
+      "command": "cmake --build build --config Debug",
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "Build Release",
+      "type": "shell",
+      "command": "cmake --build build --config Release",
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "Build & Deploy Release",
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "Build Release",
+        "Deploy Qt (Release)"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Deploy Qt (Debug)",
+      "type": "shell",
+      "command": "$ErrorActionPreference = 'Stop'; & D:/Qt/6.11.1/msvc2022_64/bin/windeployqt6.exe --debug build/Debug/tonestack.exe; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }; if (Test-Path \"$env:SystemRoot\\System32\\icu.dll\") { Copy-Item \"$env:SystemRoot\\System32\\icu.dll\" build\\Debug -Force }",
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": [],
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "shell": {
+          "executable": "${env:SystemRoot}/System32/WindowsPowerShell/v1.0/powershell.exe",
+          "args": [
+            "-NoProfile",
+            "-NonInteractive",
+            "-Command"
+          ]
+        }
+      }
+    },
+    {
+      "label": "Deploy Qt (Release)",
+      "type": "shell",
+      "command": "$ErrorActionPreference = 'Stop'; & D:/Qt/6.11.1/msvc2022_64/bin/windeployqt6.exe --release build/Release/tonestack.exe; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }; if (Test-Path \"$env:SystemRoot\\System32\\icu.dll\") { Copy-Item \"$env:SystemRoot\\System32\\icu.dll\" build\\Release -Force }",
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": [],
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "shell": {
+          "executable": "${env:SystemRoot}/System32/WindowsPowerShell/v1.0/powershell.exe",
+          "args": [
+            "-NoProfile",
+            "-NonInteractive",
+            "-Command"
+          ]
+        }
+      }
+    }
+  ]
+}

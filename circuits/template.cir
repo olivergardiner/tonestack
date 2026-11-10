@@ -1,42 +1,28 @@
 Template circuit for tonestack
 
-# Insert you circuit in the area marked below - do not change anything else.
-# The input to your circuit is node 2 relative to node 0 which is ground
-# The output of your circuit must be node 4
+* Insert you circuit in the area marked below - do not change anything else.
+* The input to your circuit is node 2 relative to node 0 which is ground
+* The output of your circuit must be node 3
 
-# Four potentiometers are available for you to use in your circuit:
-# Pot 1 has terminals on node 50 (CCW), 51 (TAP) and 52 (CW)
-# Pot 2 has terminals on node 60 (CCW), 61 (TAP) and 62 (CW)
-# Pot 3 has terminals on node 70 (CCW), 71 (TAP) and 72 (CW)
-# Pot 4 has terminals on node 80 (CCW), 81 (TAP) and 82 (CW)
+* Four potentiometers are available for you to use in your circuit
+* Each pot mus consist of two resistors: RPxLO and RPxHI
+* RPxLO and RPxHI must be connected in series
+* RPxHI is zero when the pot is fully CCW
 
-# Nodes 0 to 9 are reserved
+* Nodes 0 to 9 are reserved
 
-# Use insignificant resistors (e.g. 1 or 1M) to link other nodes to the pots where necessary
+* Use insignificant resistors (e.g. 1 or 1M) to link other nodes to the pots where necessary
 
 VIN 0 1 DC 0 AC 1
-RS 1 2 56K
+R98 1 2 56K
 
-RP1LO 50 51 500K
-RP1HI 51 52 500K
-
-RP2LO 60 61 500K
-RP2HI 61 62 500K
-
-RP3LO 70 71 500K
-RP3HI 71 72 500K
-
-RP4LO 80 81 500K
-RP4HI 81 82 500K
-
-######## PLACE YOUR CIRCUIT HERE ########
+******** PLACE YOUR CIRCUIT HERE ********
 
 R1 2 4 1M
 
-######## PLACE YOUR CIRCUIT HERE ########
+******** PLACE YOUR CIRCUIT HERE ********
 
-RVOLHI 3 4 1
-RVOLLO 4 0 1MEG
+R99 3 0 100K
 
 .OPTIONS NOACCT
 .AC DEC 40 10 100K

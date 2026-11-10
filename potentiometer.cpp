@@ -77,10 +77,10 @@ void Potentiometer::setVisible(bool visible)
 
 void Potentiometer::read(const QJsonObject &json)
 {
-    Resistor::read(json);
+
 
     if (json.contains("type") && json["type"].isDouble()) {
-        type = (potType) json["type"].toInt();
+        type = static_cast<potType>(qBound(0, json["type"].toInt(), int(POT_STYPE)));
     }
 
     if (json.contains("function") && json["function"].isString()) {
@@ -95,10 +95,10 @@ void Potentiometer::read(const QJsonObject &json)
 
     typeSelect->setCurrentIndex(type);
 
-    position = 49;
+    position = qBound(0, json.value("position").toInt(49), POT_MAX);
     dial->setValue(position);
 
-    setValue(value);
+    setValue(json.value("value").toInt(1));
 }
 
 void Potentiometer::write(QJsonObject &json) const
@@ -108,6 +108,7 @@ void Potentiometer::write(QJsonObject &json) const
     json["type"] = type;
     json["function"] = labelText;
     json["ganged"] = ganged;
+    json["position"] = position;
 }
 
 bool Potentiometer::isGanged() const

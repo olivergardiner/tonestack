@@ -17,7 +17,7 @@ typedef struct pot {
     char label[32];
     int value;
     potType type;
-    bool ganged;
+    bool ganged = false;
 } pot;
 
 class Potentiometer : public Resistor
@@ -53,7 +53,7 @@ private:
     QString labelText;
     potType type = POT_LIN;
     int position = POT_MAX / 2;
-    bool ganged;
+    bool ganged = false;
     int id;
 
     double potFactor[POT_STYPE + 1] = { 0.5, 0.12, 0.25, 0.88, 0.5};

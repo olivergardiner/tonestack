@@ -1,0 +1,5 @@
+{
+    "cmake.configureSettings": {
+        "CMAKE_PREFIX_PATH": "D:/Qt/6.11.1/msvc2022_64"
+    }
+}
